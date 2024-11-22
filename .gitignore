@@ -1,0 +1,7 @@
+# Ignore all files in the second lecture3 folder
+/django/lecture3/lecture3/
+
+# General ignores
+*.pyc
+__pycache__/
+db.sqlite3
