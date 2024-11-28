@@ -1,0 +1,28 @@
+{% load static %}
+
+<!DOCTYPE html>
+    <html lang="fr">
+        <head>
+            <title>{% block title %}{% endblock %}</title>
+            <link href="{% static 'roadmap/styles-v0.css' %}" rel="stylesheet">
+            <link rel="icon" href="{% static 'icons/RoundedIcon.png' %}" type="image/png">
+        </head>
+        <body>
+            <header class="header">
+                <a class="h-text" href="{% url 'home' %}">home</a>
+                <a class="h-text" href="{% url 'builds' %}">builds</a>
+                <a class="h-text" href="{% url 'roadmap' %}">roadmap</a>
+                <a class="h-text" href="{% url 'spreadsheet' %}">spreadsheet</a>
+            </header>
+            <div class="page">
+                <div class="sidebar">
+                {% block sidebar%}
+                {% endblock%}
+                </div>
+                <div class="body">
+                {% block body%}
+                {% endblock%}
+                </div>
+            </div>
+        </body>
+    </html>
