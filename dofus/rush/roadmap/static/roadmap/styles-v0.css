@@ -4,7 +4,7 @@
 html, body {
     margin: 0;
     padding: 0;
-    background-color: var(--background-color) ;
+    background-color: var( --darker-bg-color) ;
     overflow-x: hidden;
 
     font-size: 10px;
@@ -17,6 +17,7 @@ html, body {
 :root {
     /* header color */
     --primary-header-color: #f6ead4;
+    --secondary-header-color: #2e2b26;
     --header-text-color: #a2a595;
 
     /* side color */
@@ -25,7 +26,8 @@ html, body {
 
     /* background color */
     --background-color: #b4a284;
-    --guide-text-color:#665D52;
+    --guide-text-color:#48423a;
+    --darker-bg-color: #2E2924;
 
     /* text color */
     --text-color: #fff9ed;
@@ -47,7 +49,10 @@ html, body {
 .header{
     padding: 0.75rem;
     width: 100vw;
+
     background-color: var(--primary-header-color);
+    border-bottom: 2px solid var(--secondary-header-color);
+
     position: fixed; 
     top: 0; 
     left: 0; 
@@ -57,6 +62,7 @@ html, body {
     align-items: center;
     align-content: center;
     justify-content: space-evenly;
+
 }
 
 .h-text{
@@ -72,6 +78,7 @@ html, body {
 #navbar {
     width: 200px;
     background-color: var(--background-side-color);
+    border-right: 2px solid var(--secondary-header-color);
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -85,6 +92,7 @@ html, body {
 
 #navbar header {
     font-size: 2em;
+
     text-transform: uppercase;
     font-weight: bold;
     color: var(--text-color);
@@ -99,22 +107,24 @@ html, body {
 }
 
 .step{
-    font-size: 2rem;
-    text-transform: uppercase;
-    font-weight: bold;
+    font-size: 1.4rem;
+    text-transform: capitalize;
     color: var(--text-color);
 }
 
 .nav-link {
-    font-size: 2rem;
+    font-size: 1.4rem;
     text-decoration: underline;
     text-underline-offset: 0.5rem;
+    text-transform: capitalize;
     color:var(--text-color);
 
     padding: 10px;
     border-radius: 4px;
 
     display: block;
+    position: relative;
+    right:0.5rem;
 }
 
 .main-content {
@@ -188,6 +198,7 @@ table {
     
 }
 thead th{
+    font-size: 1.5rem;
     border: 2px solid var(--background-side-color);
 }
 
@@ -196,12 +207,15 @@ tbody td, thead th {
 }
 
 tr.data td {
+    font-size: 1.2rem;
+
     border: 2px solid var(--background-side-color);
     vertical-align: center;
     text-align: center;
     padding: 0.75rem 0;
 }
 .description td{
+    font-size: 1.3rem;
     padding: 1rem 0;
     font-style: italic;
     font-weight: 400;
@@ -210,10 +224,12 @@ tr.data td {
 }
 
 .quete{
+    font-size: 1.3rem;
     color:var(--quete-color);
 }
 
 .important{
+    font-size: 1.3rem;
     color:var(--important-color);
 }
 .travel{
