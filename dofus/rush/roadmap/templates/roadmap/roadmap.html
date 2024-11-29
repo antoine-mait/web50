@@ -5,43 +5,491 @@ roadmap
 {% endblock %}
 
 {% block sidebar%}
-    <div class="sidebar" id="title">
-        <div>
-            <a class="title" href="#title">road map</a>
+    <nav id="navbar">
+        <div class="header-container">
+            <header>road map</header>
         </div>
-        <ol class="stage">
-            <li class="substage"><a class="nav-link" href="#couleur_perso">Création Personnage</a> :</li>   
-            <li class="substage"><a class="nav-link" href="#incarnam">Incarnam :</a></li>
+        <ol class="step">
+            <li><a class="nav-link" href="#couleur_perso">Création Personnage</a></li>   
+            <li><a class="nav-link" href="#journaliere">Quête journaliere</a></li>
+            <li><a class="nav-link" href="#incarnam">Incarnam</a></li>
+            <li><a class="nav-link" href="#piou">Piou</a></li>
+            <li><a class="nav-link" href="#xp-drop">Stuff lvl 10</a></li>
+            <li><a class="nav-link" href="#Kardorim">Donjon Kardorim</a></li>
+            <li><a class="nav-link" href="#d-quete-astrub">Début Quêtes Astrub</a></li>
+            <li><a class="nav-link" href="#dj-champ">Donjon des Champs</a></li>
+            <li><a class="nav-link" href="#dj-mousse">Donjon Mob l'éponge</a></li>
+            <li><a class="nav-link" href="#dj-bouftou">Donjon Bouftou Royal</a></li>
         </ol>
-    </div>
+    </nav>
 {% endblock %}
 
 {% block body %}
-    <div class="guide">
-        <a class="guide_text" id="couleur_perso">Création personnage</a>
-        <div class="road">
-            <div class="left">
-                <a >Couleur PermaBan : </a>
-                <ul class="color">
-                    <li>Peau :                 E3928A </li>
-                    <li>Cheveux :          000000 </li>
-                    <li>Vêtements 1 :   000000 </li>
-                    <li>Vêtements 2 :   BDFFD9 </li>
-                    <li>Vêtements 3 :   BDFFD9 </li>
-                    <li>Vêtements 4 :   BDFFD9 </li>
-                </ul>
+    <div class="main-content">
+        <section class="main-section">
+            <a id="couleur_perso" class="subtitle">Création personnage</a>
+                <div id="step1">
+                    <div class="left">
+                        <a class="subtitle">Couleur PermaBan : </a>
+                        <ul class="color">
+                            <li>Peau :                  E3928A </li>
+                            <li>Cheveux :           000000 </li>
+                            <li>Vêtements 1 :   000000 </li>
+                            <li>Vêtements 2 :   BDFFD9 </li>
+                            <li>Vêtements 3 :   BDFFD9 </li>
+                            <li>Vêtements 4 :   BDFFD9 </li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <a class="subtitle">Couleur Sewsi : </a>
+                        <ul class="color">
+                            <li>Peau :                   Base color </li>
+                            <li>Cheveux :           C9CCC1 </li>
+                            <li>Vêtements 1 :   94A692 </li>
+                            <li>Vêtements 2 :   6A765E </li>
+                            <li>Vêtements 3 :   57634B </li>
+                            <li>Vêtements 4 :   E4E1C2 </li>
+                        </ul>
+                    </div>
+                </div>
+            
+            <!-- Tableur information -->
+
+            <div id="tableur-step">
+            
+                <!-- Quete journaliere -->
+
+            <a id="journaliere" class="subtitle">Quête journalière</a>
+            <table>
+                <thead>
+                    <tr>
+                        <th><span>Etape</span></th>
+                        <th><span>/travel pos</span></th>
+                        <th><span>Information</span></th>
+                        <th><span>succes</span></th>
+                        <th><span>quete</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="description">
+                        <td colspan="5">Faire le mini donjon de dédé pour avoir des alliages</td>
+                    </tr>
+                    <tr class="data" id="step2">
+                        <td><a class="etape">Coffre de dédé</a></td>
+                        <td><a class="travel"> /travel -10,-11 </a></td>
+                        <td><a class="important">prévoir 10 Fer </a></td>
+                        <td><a> - </a></td>
+                        <td><a> - </a></td>
+                    </tr>
+                    <tr class="description">
+                        <td colspan="5">Affronter 3 Xélor Suspect</td>
+                    </tr>
+                    <tr class="description">
+                        <td colspan="5">Vendre les poils ou craft Amulette de la chance et vendre</td>
+                    </tr>
+                    <tr class="data" id="step3">
+                        <td rowspan="5"><a class="etape">Kerubim</a></td>
+                        <td><a class="travel"> /travel  3,-17 </a></td>
+                        <td><a class="important"> Parler a kérubim </a></td>
+                        <td rowspan="5"><a> - </a></td>
+                        <td rowspan="5"><a class="quete" target="_blank" href="https://www.dofuspourlesnoobs.com/bien-velu-cest-kerubim.html">Bien velu c'est kérubim</a></td>
+                    </tr>
+                    <tr class="data" id="step4">
+                        <td><a class="travel"> /travel -3,-24 </a></td>
+                        <td><a class="important"> TP au zaap Almanax </a></td>
+                    </tr>
+                    <tr class="data" id="step5">
+                        <td><a class="travel"> /travel  6,-16 </a></td>
+                        <td><a class="important"> TP Astrub </a></td>
+                    </tr>
+                    <tr class="data" id="step6">
+                        <td><a class="travel"> /travel  3,1 </a></td>
+                        <td><a class="important"> Chemin roublard et sortir a Amakna </a></td>
+                    </tr>
+                    <tr class="data" id="step7">
+                        <td><a class="travel"> /travel  3,-17 </a></td>
+                        <td><a class="important"> TP Astrub rendre a Kerubim </a></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <br>
+
+            <!-- incarnam -->
+
+            <a id="incarnam" class="subtitle">Incarnam</a>
+            <table>
+                <tbody>
+                    <tr class="description">
+                        <td colspan="5">Skip le tuto ( haut gauche de l'ecrant )</td>
+                    </tr>
+                    <tr class="data" id="step8">
+                        <td><a class="etape">Sortir du temple</a></td>
+                        <td><a class="travel"> 3 map a droite</a></td>
+                        <td><a class="important">Rentrer et sortir de la taverne </a></td>
+                        <td><a> - </a></td>
+                        <td><a> - </a></td>
+                    </tr>
+                    <tr class="data" id="step9">
+                        <td rowspan="5"><a class="etape">Visite Incarnam</a></td>
+                        <td><a class="travel"> Descendre 1 map et monter de 2 map</a></td>
+                        <td><a class="important">/invite Eltomtom</a></td>
+                        <td><a> - </a></td>
+                        <td><a> - </a></td>
+                    </tr>
+                    <tr class="data" id="step10">
+                        <td><a class="travel"> Droite jusque la mine, rentrer et sortir</a></td>
+                        <td><a class="important">/invite sewsi</a></td>
+                        <td><a> - </a></td>
+                        <td><a> - </a></td>
+                    </tr>
+                    <tr class="data" id="step11">
+                        <td><a class="travel"> Direction Astrub</a></td>
+                        <td><a class="important">/invite permaban</a></td>
+                        <td><a> - </a></td>
+                        <td><a> - </a></td>
+                    </tr>
+                </tbody>
+            </table>
+            <br>
+
+            <!-- Piou  -->
+
+            <a id="piou" class="subtitle">Farm Pano Piou</a>
+            <table>
+                <tbody>
+                    <tr class="description">
+                        <td colspan="5">Arriver a Astrub prendre la quête au PNJ </td>
+                    </tr>
+                    <tr class="data" id="step12">
+                        <td rowspan="5"><a class="etape">Kamas pour chemin Roublard</a></td>
+                        <td><a class="travel"> 3 map a gauche</a></td>
+                        <td><a class="important">Rentrer , finir la quête et prendre la suivante </a></td>
+                        <td><a> - </a></td>
+                        <td><a> - </a></td>
+                    </tr>
+                    <tr class="data" id="step13">
+                        <td><a class="travel">Prendre le chemin Roublard pour Amakna</a></td>
+                        <td><a class="important">Passer sur la map du zaap sur le chemin</a></td>
+                        <td><a> -</a></td>
+                        <td><a> - </a></td>
+                    </tr>
+                    <tr class="data" id="step14">
+                        <td><a class="travel"> Temple iop </a></td>
+                        <td><a class="important"> Taper piou Jaune et vert en priorité </a></td>
+                        <td><a> - </a></td>
+                        <td><a class="quete" target="_blank" href="https://www.dofuspourlesnoobs.com/ougrave-est-passeacutee-la-7-e-compagnie.html">Ou est passée la 7e compagnie ?</a></td>
+                    </tr>
+                    <tr class="data" id="step15">
+                        <td><a class="travel"> Atelier Forgeron Porte gauche</a></td>
+                        <td><a class="important"> Lvl 6 , Challenge butin </a></td>
+                        <td><a> - </a></td>
+                        <td><a class="quete"> Prendre les 4 quêtes proposées </a></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <br>
+            
+            <!-- Xp lvl 12-16  -->
+
+            <a id="xp-drop" class="subtitle">Fin de drop et XP</a>
+            <table>
+                <tbody>
+                    <tr class="description">
+                        <td colspan="5">Finir de drop panoplie , un peu d'exploration et d'experience</td>
+                    </tr>
+                    <tr class="description">
+                        <td colspan="5">Si Respawn rapide rester ici , sinon tenter Brâkmar</td>
+                    </tr>
+                    <tr class="data" id="step16">
+                        <td><a class="etape">Panoplie Piou</a></td>
+                        <td><a class="travel"> Zaap -2,0 et map gauche</a></td>
+                        <td><a class="important">Continuer de taper les piou</a></td>
+                        <td><a> - </a></td>
+                        <td><a> - </a></td>
+                    </tr>
+                    <tr class="data" id="step17">
+                        <td><a class="etape">Découverte Zone Craq et mine Forgelance</a></td>
+                        <td><a class="travel"> /travel -2,4 </a></td>
+                        <td><a class="important"> Challenge Butin </a></td>
+                        <td><a> - </a></td>
+                    </tr>
+                    <tr class="data" id="step18">
+                        <td><a class="etape">Zaap Passage vers Brâkmar</a></td>
+                        <td><a class="travel"> /travel -1,13 </a></td>
+                        <td><a class="important"> Lead sewsi/ follow / auto join / auto prêt </a></td>
+                        <td><a> - </a></td>
+                        <td><a> - </a></td>
+                    </tr>
+                    <tr class="data" id="step19">
+                        <td><a class="etape">Passage vers Brâkmar</a></td>
+                        <td><a class="travel"> - </a></td>
+                        <td><a class="important"> A la sortie parler au PNJ pour TP Brâkmar </a></td>
+                        <td><a> - </a></td>
+                        <td><a> - </a></td>
+                    </tr>
+                    <tr class="description">
+                        <td colspan="5">2 Pano Air / 1 Pano Terre et ce suicide</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <br>
+            
+            <!-- Donjon Incarnam  -->
+
+            <a id="Kardorim" class="subtitle">Donjon Kardorim</a>
+            <table>
+                <tbody>
+                    <tr class="description">
+                        <td colspan="5">Full succès Donjon Kardorim</td>
+                    </tr>
+                    <tr class="data" id="step20">
+                        <td rowspan="2"><a class="etape">Donjon Kardorim</a></td>
+                        <td><a> - </a></td>
+                        <td><a class="important">Valider la quête avant de sortir du Donjon</a></td>
+                        <td><a> - </a></td>
+                        <td><a> - </a></td>
+                    </tr>
+                    <tr class="data" id="step21">
+                        <td><a> - </a></td>
+                        <td><a class="important">Level up avec les succès lvl 20</a></td>
+                        <td><a> - </a></td>
+                        <td><a> - </a></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <br>
+            <!-- Début quête Astrub  -->
+
+            <a id="d-quete-astrub" class="subtitle">Début des quêtes Astrub</a>
+            <table>
+                <tbody>
+                    <tr class="description">
+                        <td colspan="5">Faire le début des quêtes d'astrub pour débloquer des quêtes parallèles au donjon du tour du monde</td>
+                    </tr>
+                    <tr class="data" id="step22">
+                        <td rowspan="3"><a class="etape">Quête 1</a></td>
+                        <td><a class="travel"> /travel 6,-18 </a></td>
+                        <td><a class="important">Acheter une Bière</a></td>
+                        <td><a> - </a></td>
+                        <td rowspan="3"><a class="quete" target="_blank" href="https://www.dofuspourlesnoobs.com/on-marche-sur-des-oeufs.html">
+                            On marche sur des Oeufs
+                        </a></td>
+                    </tr>
+                    <tr class="data" id="step23">
+                        <td><a class="travel"> /travel 2,-15 </a></td>
+                        <td><a class="important">Sort Maîtrise des invocations</a></td>
+                        <td><a> - </a></td>
+                    </tr>
+                    <tr class="data" id="step24">
+                        <td><a> - </a></td>
+                        <td><a class="important">Combattre nowa</a></td>
+                        <td><a> - </a></td>
+                    </tr>
+                    <tr class="description">
+                        <td colspan="5">Si pas lvl 20 , faire succès monstre Larve , Cimetières d'astrub et le succès d'exploration de ses zones </td>
+                    </tr>
+                    <tr class="data" id="step25">
+                        <td><a class="etape">Quête 1</a></td>
+                        <td><a class="travel"> /travel 2,-15 </a></td>
+                        <td><a class="important">Prendre quête Emma Tompouce</a></td>
+                        <td><a> - </a></td>
+                        <td><a class="quete" target="_blank" href="https://www.dofuspourlesnoobs.com/on-marche-sur-des-oeufs.html">
+                            On marche sur des Oeufs
+                        </a></td>
+                    </tr>
+                    <tr class="data" id="step26">
+                        <td rowspan="2"><a class="etape">Quête 2</a></td>
+                        <td><a class="travel"> /travel 5,-19 </a></td>
+                        <td><a class="important">Rendre Nowa et prendre la quête suivante</a></td>
+                        <td><a> - </a></td>
+                        <td rowspan="2"><a class="quete" target="_blank" href="https://www.dofuspourlesnoobs.com/biere-qui-roule-n-amasse-pas-mousse.html">
+                            Bière qui roule n'amasse pas mousse
+                    </tr>
+                    <tr class="data" id="step27">
+                        <td><a class="travel"> Taverne et revenir </a></td>
+                        <td><a class="important">Acheter une bière en parlant au pnj pas en achetant</a></td>
+                        <td><a> - </a></td>
+                    </tr>
+                    <tr class="data" id="step28">
+                        <td><a class="etape">Quête 3</a></td>
+                        <td><a class="travel"> /travel 5,-19 </a></td>
+                        <td><a class="important"> Prendre la quête a Badufron et sortir </a></td>
+                        <td><a> - </a></td>
+                        <td><a class="quete" target="_blank" href="https://www.dofuspourlesnoobs.com/combat-de-rue.html">
+                            Combat de Rue
+                    </tr>
+                    <tr class="data" id="step29">
+                        <td><a class="etape">Quête 4</a></td>
+                        <td><a class="travel"> /travel 5,-22 </a></td>
+                        <td><a class="important"> A prendre avant le Donjon Champ </a></td>
+                        <td><a> - </a></td>
+                        <td><a class="quete" target="_blank" href="https://www.dofuspourlesnoobs.com/dejeuner-a-la-fourchette.html">
+                            Dejeuner a la fourchette
+                    </tr>
+                </tbody>
+            </table>
+
+            <br>
+            
+            <!-- Donjon Champ  -->
+
+            <a id="dj-champ" class="subtitle">Donjon des Champs</a>
+            <table>
+                <tbody>
+                    <tr class="description">
+                        <td colspan="5">Faire le début des quêtes d'astrub pour débloquer des quêtes parallèles au donjon du tour du monde</td>
+                    </tr>
+                    <tr class="data" id="step29">
+                        <td><a class="etape">Quête 4</a></td>
+                        <td rowspan="2"><a class="travel"> /travel 7,-24 </a></td>
+                        <td><a class="important">Parler a Metag robill avant de rentrer dans le Donjon </a></td>
+                        <td><a class="succes"> CHALLENGE BUTIN </a></td>
+                        <td rowspan="2"><a class="quete" target="_blank" href="https://www.dofuspourlesnoobs.com/le-tour-du-monde.html">
+                            le tour du monde
+                        </a></td>
+                    </tr>
+                    <tr class="data" id="step30">
+                        <td><a class="etape">Donjon champ</a></td>
+                        <td><a class="important">Drop anneau = cra / panda Air Drop Arme = Cra Terre</a></td>
+                        <td><a class="succes"> Tout sauf Duo et tenter spécial </a></td>
+                    </tr>
+                    <tr class="data" id="step31">
+                        <td><a class="etape">Quête 4</a></td>
+                        <td><a class="travel"> /travel 5,-22 </a></td>
+                        <td><a class="important">Appeler des renforts pour faire le combat ensemble</a></td>
+                        <td><a> - </a></td>
+                        <td><a class="quete"> Rendre la quête Déjeuner a la fourchette </a></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <br>
+            
+            <!-- Donjon Mousse  -->
+
+            <a id="dj-mousse" class="subtitle">Donjon Mob l'éponge</a>
+            <table>
+                <tbody>
+                    <tr class="description">
+                        <td colspan="5">Ne pas prendre les succès du Donjon Champ pour rester BL</td>
+                    </tr>
+                    <tr class="data">
+                        <td><a class="etape">Quête 5</a></td>
+                        <td><a class="travel"> /travel 11,-24 </a></td>
+                        <td><a class="important">Prendre la quête Bart Coursty </a></td>
+                        <td><a class="succes"> CHALLENGE BUTIN </a></td>
+                        <td rowspan="3"><a class="quete" target="_blank" href="https://www.dofuspourlesnoobs.com/comme-un-pichon-hors-de-l-eau.html">
+                            Un pichon hors de l'eau
+                        </a></td>
+                    </tr>
+                    <tr class="data">
+                        <td><a class="etape">Donjon Mousse</a></td>
+                        <td><a class="travel"> - </a></td>
+                        <td><a class="important"> Panoplie mousse = Cra / Panda</a></td>
+                        <td><a class="succes"> CHALLENGE BUTIN et full succès</a></td>
+                    </tr>
+                    <tr class="data">
+                        <td><a class="etape">Rendre Quête 5</a></td>
+                        <td><a class="travel"> /travel 11,-24 </a></td>
+                        <td><a class="important"> Ce suicide </a></td>
+                        <td><a> - </a></td>
+                    </tr>
+                    <tr class="data">
+                        <td><a class="etape">Rendre la quête a Metag dans la tavern</a></td>
+                        <td><a class="travel"> /travel 11,-24 </a></td>
+                        <td><a class="important"> Prendre la suivante ( Donjon Bouftou) </a></td>
+                        <td><a> - </a></td>
+                        <td><a> - </a></td>
+                    </tr>
+                    <tr class="data">
+                        <td><a class="etape">Rendre la quête a Emma Tompouce</a></td>
+                        <td><a class="travel"> /travel 1,-15 </a></td>
+                        <td><a class="important"> Prendre la suivante ( Donjon Rikiki) </a></td>
+                        <td><a> - </a></td>
+                        <td><a> - </a></td>
+                    </tr>
+                    <tr class="description">
+                        <td colspan="5">Prendre les succès pour up lvl 28</td>
+                    </tr>
+                </tbody>
+            </table>
+                <br>
             </div>
-            <div class="right">
-                <a >Couleur Sewsi : </a>
-                <ul class="color">
-                    <li>Peau :                Base color </li>
-                    <li>Cheveux :          C9CCC1 </li>
-                    <li>Vêtements 1 :   94A692 </li>
-                    <li>Vêtements 2 :   6A765E </li>
-                    <li>Vêtements 3 :   57634B </li>
-                    <li>Vêtements 4 :   E4E1C2 </li>
-                </ul>
-            </div>
-        </div>
+
+            <!-- Donjon Bouftou  -->
+
+            <a id="dj-bouftou" class="subtitle">Donjon du Bouftou Royal</a>
+            <table>
+                <tbody>
+                    <tr class="description">
+                        <td colspan="5">être le plus proche du level 30 pour maximiser le drop</td>
+                    </tr>
+                    <tr class="data">
+                        <td rowspan="2"><a class="etape"> Chemin Tainela</a></td>
+                        <td><a class="travel"> 2 mapu au dessus de Emma , mine </a></td>
+                        <td><a> - </a></td>
+                        <td><a class="succes"> Monstre animalade </a></td>
+                        <td><a></a> - </td>
+                    </tr>
+                    <tr class="data">
+                        <td><a class="travel"> foret astrub </a></td>
+                        <td><a> - </a></td>
+                        <td><a class="succes"> Monstre forêt d'astrub </a></td>
+                        <td><a></a> - </td>
+                    </tr>
+                    <tr class="data">
+                        <td><a class="etape">Quete 6</a></td>
+                        <td><a class="travel"> /travel 2,-31 </a></td>
+                        <td><a class="important"> Prendre le Zaap Tainela </a></td>
+                        <td><a > - </a></td>
+                        <td rowspan="4"><a class="quete" href="https://www.dofuspourlesnoobs.com/la-coupe-des-vices.html">
+                            La coupe des vices
+                        </a></td>
+                    </tr>
+                    <tr class="data">
+                        <td><a class="etape">Quete 7</a></td>
+                        <td><a class="travel"> 3 Map sous le Zaap </a></td>
+                        <td><a> - </a></td>
+                        <td><a> - </a></td>
+                    </tr>
+                    <tr class="data">
+                        <td><a class="etape">Donjon Bouftou</a></td>
+                        <td><a> - </a></td>
+                        <td><a></a></td>
+                        <td><a class="succes"> Ne pas finir coller a un monstre </a></td>
+                    </tr>
+                    <tr class="data">
+                        <td><a class="etape">Quete 6</a></td>
+                        <td><a class="travel"> /travel 2,-31 </a></td>
+                        <td><a class="important"> Rendre la quête et suicide </a></td>
+                        <td><a> - </a></td>
+                    </tr>
+                    <tr class="data">
+                        <td><a class="etape">Render la quête a Metag dans la Tavern Astrub</a></td>
+                        <td><a class="travel"> /travel 5,-17</a></td>
+                        <td><a class="important"> Au passage prendre quête Cindy Cah </a></td>
+                        <td><a> - </a></td>
+                        <td><a> - </a></td>
+                    </tr>
+                    <tr class="description">
+                        <td colspan="5">Au level 30 choisir son compagnon </td>
+                    </tr>
+                    <tr class="description">
+                        <td colspan="5">sewsi prend lumino </td>
+                    </tr>
+                    <tr class="description">
+                        <td colspan="5">PermaBan prend skale</td>
+                    </tr>
+                    <tr class="description">
+                        <td colspan="5">Tomtom prend Ombre</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </section>
     </div>
 {% endblock %}

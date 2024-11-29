@@ -14,11 +14,11 @@
                 <a class="h-text" href="{% url 'roadmap' %}">roadmap</a>
                 <a class="h-text" href="{% url 'spreadsheet' %}">spreadsheet</a>
             </header>
-            <div class="page">
-                <div class="sidebar">
+            <div id="main-doc">
+                <nav id="navbar">
                 {% block sidebar%}
                 {% endblock%}
-                </div>
+                </nav>
                 <div class="body">
                 {% block body%}
                 {% endblock%}

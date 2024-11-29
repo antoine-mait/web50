@@ -9,6 +9,9 @@ html, body {
 
     font-size: 10px;
     font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+
+    display: flex;
+    min-height: 100vh;
 }
 
 :root {
@@ -27,6 +30,11 @@ html, body {
     /* text color */
     --text-color: #fff9ed;
 
+    /* span color */
+    --travel-color: #442818;
+    --important-color:#d3370b;
+    --quete-color:#1d07c5;
+    --succes-color:#279736;
   }
 
 .header, :visited, :link{
@@ -55,112 +63,162 @@ html, body {
     padding-top: 0.6rem;
 }
 
-.page {
+#main-doc {
     display: flex;
     width: 100%;
-    margin-top: 4rem; /* Space for the fixed header */
-    max-width: 100vw;
+    padding-top: 40px;
 }
 
-.sidebar {
-    margin: 0;
-    padding: 1rem;
-    background-color: var(--background-side-color);
-    height: 100vh;
+#navbar {
     width: 200px;
+    background-color: var(--background-side-color);
     display: flex;
     flex-direction: column;
-    align-items: center;
-    position: fixed; 
+    gap: 10px;
 }
 
-.title{
-    font-size: 1.5rem;
-    text-transform:uppercase;
-    font-weight: bold;
-    color: var(--text-color) ;
-    border: 2px solid  var(--background-side-secondary-color);
-    padding: 5px;
-    border-radius:5px;
-}
-#title{
-    margin:2rem 0 0 0;
-}
-.stage {
-    margin: 3rem 0 1rem 0;
-    padding: 0;
-    list-style-position: inside;
-    /* Align text inside steps */
-    text-align: left;
-    color: var(--text-color) ;
-    font-weight: bold;
-    font-size: 1.5rem;
-    width: 100%; 
+.header-container {
+    display: flex; /* Optional: Center within navbar */
+    justify-content: center; /* Centers the header */
+    padding: 2rem 0 0 0;
 }
 
-.substage{
-    margin: 0 0 1rem 0;
-}
-.nav-link{
-    color: var(--text-color) ;
-    font-size: 1.5rem;
-    text-decoration: underline;
-    text-underline-offset: 0.5rem;
-    margin-top: 2rem;
-}
-.body{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    color: var(--guide-text-color);
-    padding-left: 200px;
-}
-.guide_text{
-    font-size: 2rem;
-    font-weight: bold;
+#navbar header {
+    font-size: 2em;
     text-transform: uppercase;
+    font-weight: bold;
+    color: var(--text-color);
+
+    margin: 0;
+    padding: 0.5rem 1rem;
+
+    background-color: var(--background-side-secondary-color);
+    border-radius: 1rem;
+
+    display: inline-block;
+}
+
+.step{
+    font-size: 2rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.nav-link {
+    font-size: 2rem;
     text-decoration: underline;
     text-underline-offset: 0.5rem;
+    color:var(--text-color);
+
+    padding: 10px;
+    border-radius: 4px;
 
     display: block;
-    text-align: left;
-    margin: 2rem 0 0 2rem;
 }
-.road {
-    width: calc(100vw - 200px);
+
+.main-content {
+    padding: 20px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.main-section {
+    font-size: 2em;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: var(--background-side-color);
+
+    margin-bottom: 10px;
+}
+
+#step1{
     display: flex; 
     flex-direction: row; 
-    justify-content: left; 
-    font-weight: 2000;
-
+    justify-content: center; 
+    margin: 0 0 2rem 0;
 }
 
 .left, .right {
     margin : 2rem 0 0 2rem;
     flex: 1; 
-    padding: 1rem; 
+    padding: 2rem; 
+
 
     font-size: 1.5rem;
     font-weight: 1000;
 
-    display: block;
-    text-align: center;
-
-    border: 2px solid var(--primary-header-color);
     background-color: var(--primary-header-color);
+    border: 2px solid var(--background-side-color);
     border-radius: 50px;
     max-width: 300px;
 }
+
+.subtitle{
+    display: block;
+    text-align: center;
+    text-decoration: underline;
+    text-underline-offset: 0.5rem;
+    margin:0 0 1rem 0;
+}
+
 .color {
     margin: 0;  
     padding: 0.5rem; 
 
     list-style-position: inside;  /* Keep the bullets inside the text */
-    position: relative;
     text-align: center;
 }
 
-li {
+.color li{
     white-space: pre; /* Preserves whitespace */
+}
+
+#journaliere{
+    margin-bottom: 3rem;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    position: relative;
+    margin: 3rem 1rem 0 1rem;
+    border: 2px solid var(--background-side-color);
+    background-color: var(--primary-header-color);
+    
+}
+thead th{
+    border: 2px solid var(--background-side-color);
+}
+
+tbody td, thead th {
+    width: 100vw;
+}
+
+tr.data td {
+    border: 2px solid var(--background-side-color);
+    vertical-align: center;
+    text-align: center;
+    padding: 0.75rem 0;
+}
+.description td{
+    padding: 1rem 0;
+    font-style: italic;
+    font-weight: 400;
+    vertical-align: center;
+    text-align: center;
+}
+
+.quete{
+    color:var(--quete-color);
+}
+
+.important{
+    color:var(--important-color);
+}
+.travel{
+    color:var(--travel-color);
+}
+.succes{
+    color:var(--succes-color);
 }
