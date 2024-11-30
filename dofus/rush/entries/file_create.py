@@ -1,7 +1,7 @@
 import os
 
 # Define the directory where the files are located
-directory = r'D:\Coding\CS50\Web_programming\dofus\rush\entries'
+directory = r'D:\Coding\CS50\Web_programming\dofus\rush\entries\road'
 
 # Function to create the next unused HTML file
 def create_unused_html_file(directory, numbers):
