@@ -43,7 +43,7 @@ html, body {
     font-size: 2rem;
     text-transform:uppercase;
     font-weight: bold;
-    color:var(--header-text-color);
+    color:var(--secondary-header-color);
     text-decoration: none;
 }
 .header{
@@ -55,6 +55,24 @@ html, body {
 
     position: fixed; 
     top: 0; 
+    left: 0; 
+    z-index: 1000;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    align-content: center;
+    justify-content: space-evenly;
+
+}
+.footer{
+    padding: 0.75rem;
+    width: 100vw;
+
+    background-color: var(--primary-header-color);
+    border-top: 2px solid var(--secondary-header-color);
+
+    position: fixed; 
+    bottom: 0; 
     left: 0; 
     z-index: 1000;
     display: flex;
@@ -114,9 +132,7 @@ html, body {
 
 .nav-link {
     font-size: 1.4rem;
-    text-decoration: underline;
-    text-underline-offset: 0.5rem;
-    text-transform: capitalize;
+    text-transform: uppercase;
     color:var(--text-color);
 
     padding: 10px;
@@ -154,7 +170,6 @@ html, body {
     flex: 1; 
     padding: 2rem; 
 
-
     font-size: 1.5rem;
     font-weight: 1000;
 
@@ -166,18 +181,20 @@ html, body {
 
 .subtitle{
     display: block;
+
     text-align: center;
     text-decoration: underline;
     text-underline-offset: 0.5rem;
-    margin:0 0 1rem 0;
+    color: var(--primary-header-color);
+
+    margin:2rem 0 1rem 0;
 }
 
 .color {
-    margin: 0;  
-    padding: 0.5rem; 
+    margin: -5rem 0 0 -1rem;  
 
     list-style-position: inside;  /* Keep the bullets inside the text */
-    text-align: center;
+    text-align: left;
 }
 
 .color li{
