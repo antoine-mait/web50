@@ -255,3 +255,54 @@ tr.data td {
 .succes{
     color:var(--succes-color);
 }
+.stuff-image {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 550px;  /* Optional: to limit the maximum width */
+    height: auto;  /* Maintain aspect ratio */
+    border-radius: 10px;
+}
+
+.main-section-stuff {
+    display: flex;
+    flex-direction: column;
+    font-size: 2em;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: var(--background-side-color);
+
+    margin-bottom: 10px;
+}
+.stuff-ressource{
+    display: flex;
+    flex-direction: row;
+}
+.ressources{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: calc(100vw - 400px);
+    text-decoration: underline;
+    text-underline-offset: 0.5rem;
+    color: var(--primary-header-color);
+
+}
+.ressources-part{
+    display: flex;
+    flex-wrap: wrap; /* Enable wrapping to a new row */
+    justify-content: center; /* Optional: Center the images */
+    gap: 1rem; /* Optional: Add spacing between images */
+    width: 100%;
+    max-width: 100vw; /* Ensure it doesn't go beyond the viewport */
+    margin: 0 0 0 2rem;
+}
+.ressources-image{
+    width: 100%;
+    flex-wrap: wrap;
+    max-width: 550px;  /* Optional: to limit the maximum width */
+    height: auto;  /* Maintain aspect ratio */
+    border-radius: 10px;
+
+    
+}

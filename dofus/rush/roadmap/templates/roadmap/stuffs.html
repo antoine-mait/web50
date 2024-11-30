@@ -1,0 +1,39 @@
+{% extends "roadmap/layout.html" %}
+{% load custom_filters %}
+{% load static %}
+
+{% block title%}
+stuffs
+{% endblock %}
+
+{% block sidebar %}
+    <nav id="navbar">
+        <div class="header-container">
+            <header>stuffs</header>
+        </div>
+        <ul class="step">
+            {% for entry in entries %}
+                {% if 'unused' not in entry %}
+                <li><a class="nav-link" href="#{{ entry|remove_prefix|replace:'_' }}">
+                    {{ entry|remove_prefix|replace:'_' }}</a></li>
+                {% endif %}
+
+            {% endfor %}
+        </ul>
+    </nav>
+{% endblock %}
+
+{% block body %}
+<div class="main-content">
+    <section class="main-section-stuff">
+        {% for entry in entries %}
+
+        <div id="{{ entry }}">
+            <p>{{ entry_content|get_item:entry|safe }}</p>
+        </div>
+
+        {% endfor %}
+        
+    </section>
+</div>
+{% endblock %}
