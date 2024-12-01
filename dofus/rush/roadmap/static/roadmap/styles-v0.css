@@ -280,44 +280,61 @@ tr.data td {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: calc(100vw - 400px);
+    width: calc(100vw + 15rem);
     text-decoration: underline;
     text-underline-offset: 0.5rem;
     color: var(--primary-header-color);
-
+    
+    position: relative;
+    right:45rem;
 }
 .ressources-part{
     display: flex;
     flex-wrap: wrap; /* Enable wrapping to a new row */
-    justify-content: center; /* Optional: Center the images */
+    justify-content: left; /* Optional: Center the images */
     gap: 1rem; /* Optional: Add spacing between images */
     width: 100%;
     max-width: 100vw; /* Ensure it doesn't go beyond the viewport */
     margin: 0 0 0 2rem;
-}
-
-.stuff-image {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    max-width: 550px;  /* Optional: to limit the maximum width */
-    height: auto;  /* Maintain aspect ratio */
-    border-radius: 10px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-
+    
 }
 
 .ressources-image{
-    width: 100%;
-    max-width: 550px;  /* Optional: to limit the maximum width */
-    height: auto;  /* Maintain aspect ratio */
+    max-width: 48%;
+    width: auto;
+    height: auto;  
+    object-fit: contain;
     border-radius: 10px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+.stuff-image{
+    max-width: 50%;
+    width: auto;
+    height: auto;  
+    object-fit: contain;
+    border-radius: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+.stuff-image{
+    position: relative;
+    left:5rem;
+}
+#stuff-name, #ressources{
+    position: relative;
+    right:20rem;
 }
 
 .ressources-image:hover , .stuff-image:hover {
     transform: scale(1.25); /* Scale image by 10% */
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Optional: Add a shadow on hover */
+}
+#stuff-46 , #stuff-grunob , #stuff-60 , #stuff-80{
+    scroll-margin-top: 100px; /* Adjust the offset as needed */
+}
+
+#stuff-80{
+    width: 88%;
+
 }
