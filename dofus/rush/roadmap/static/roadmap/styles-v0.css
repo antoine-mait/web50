@@ -317,6 +317,9 @@ tr.data td {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
+#stuff-110, #stuff-130{
+    max-width: 47%;
+}
 .stuff-image{
     position: relative;
     left:5rem;
@@ -327,10 +330,12 @@ tr.data td {
 }
 
 .ressources-image:hover , .stuff-image:hover {
+    position: relative;
+    z-index: 3 ;
     transform: scale(1.25); /* Scale image by 10% */
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Optional: Add a shadow on hover */
 }
-#stuff-46 , #stuff-grunob , #stuff-60 , #stuff-80{
+#stuff-46 , #stuff-grunob , #stuff-60 , #stuff-80 , #stuff-110, #stuff-130 ,.subtitle{
     scroll-margin-top: 100px; /* Adjust the offset as needed */
 }
 
