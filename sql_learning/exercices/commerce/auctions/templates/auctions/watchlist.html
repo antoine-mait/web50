@@ -1,8 +1,8 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
-
+    <h2>Watch list</h2>
+    
     <ul>
         {% for listing in listings %}
             <li>
@@ -28,4 +28,5 @@
             </li>
         {% endfor %}
     </ul>
+
 {% endblock %}

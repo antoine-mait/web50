@@ -81,6 +81,9 @@ DATABASES = {
     }
 }
 
+MEDIA_URL = '/media/'  # URL to access media files
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Folder where media files are stored
+
 AUTH_USER_MODEL = 'auctions.User'
 
 # Password validation

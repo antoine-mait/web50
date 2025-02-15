@@ -1,0 +1,51 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'auctions/styles.css' %}">
+
+{% block body %}
+    
+    <div class="title">
+        <h2>{{ page.title }}</h2>
+
+        <div class="image-container">
+            {% if user.is_authenticated %}
+                <!-- The image is now wrapped in a form to act as a button -->
+                <form method="POST">
+                    {% csrf_token %}
+                    <button type="submit" style="border: none; background: transparent; padding: 0;">
+                        <img class="watchlist" src="{{ MEDIA_URL }}full_star.png" alt="watchlist_star" width="40">
+                    </button>
+                    
+                    <!-- Show different text based on whether the item is in the wishlist -->
+                    {% if is_in_watchlist %}
+                        <p class="text-overlay">Already in your watch list</p>
+                    {% else %}
+                        <p class="text-overlay">Add to your watch list</p>
+                    {% endif %}
+                </form>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div>
+    {% if page.image_url %}
+        <img src="{{ page.image_url }}" alt="{{ page.title }}" width="400">
+    {% endif %}
+    </div>
+
+    <div>
+        {{ page.description }}
+    </div>
+    
+    <div>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="price">Bid: {{ page.price }} </label>
+            <input type="number" name="bid" step="0.01" min="0.01" placeholder="0.00$" required>
+        </form>
+    </div>
+    
+    
+
+{% endblock %}
