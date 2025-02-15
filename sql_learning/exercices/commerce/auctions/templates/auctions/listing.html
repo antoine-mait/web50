@@ -13,18 +13,16 @@
                 <!-- The image is now wrapped in a form to act as a button -->
                 <form method="POST">
                     {% csrf_token %}
-                    <button type="submit" style="border: none; background: transparent; padding: 0;">
-                        <img class="watchlist" src="{{ MEDIA_URL }}full_star.png" alt="watchlist_star" width="40">
-                    </button>
-                    
+
                     <!-- Show different text based on whether the item is in the wishlist -->
-                    {% if is_in_watchlist %}
+                    {% if listing.id in watchlist_items  %}
+                        <img class="watchlist" src="{{ MEDIA_URL }}full_star.png" alt="watchlist_star" width="40">
                         <p class="text-overlay">Already in your watch list</p>
-                    {% else %}
+                    {% elif %}
+                        <img class="watchlist" src="{{ MEDIA_URL }}empty_star.png" alt="watchlist_star" width="40">
                         <p class="text-overlay">Add to your watch list</p>
                     {% endif %}
                 </form>
-            {% endif %}
         </div>
     </div>
     

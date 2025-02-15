@@ -5,25 +5,37 @@
 
     <ul>
         {% for listing in listings %}
-            <li>
-                <div class="title">
-                    <a href="{% url 'listing' listing.id %}">
-                        <h3>{{ listing.title }}</h3>
-                    </a>
-            
-                    <div class="image-container">
+            <div class="title">
+            <h3>{{ listing.title }}</h3>
+                <div class="image-container">
                     {% if user.is_authenticated %}
-                        <img class="watchlist" src="{{ MEDIA_URL }}full_star.png" alt="watchlist_star" width="30">
-                        <p class="text-overlay">Add to your Watch list</p>
+                        <!-- The image is now wrapped in a form to act as a button -->
+                        <form method="POST" action="{% url 'toggle_watchlist' listing.id %}">
+                            {% csrf_token %}
+                            
+                            <button type="submit" style="border: none; background: transparent; padding: 0;">
+                             <!-- Show different text based on whether the item is in the wishlist -->
+                             {% if listing.id in watchlist_items %}
+                                <img class="watchlist" src="{{ MEDIA_URL }}full_star.png" alt="watchlist_star" width="40">
+                                 <p class="text-overlay">Remove from Watchlist</p>
+                             {% else %}
+                                 <img class="watchlist" src="{{ MEDIA_URL }}empty_star.png" alt="watchlist_star" width="40">
+                                 <p class="text-overlay">Add to your watch list</p>
+                             {% endif %}
+                            
+                            </button>
+
+                        </form>
                     {% endif %}
                     </div>
                 </div>
+            </div>
                 {% if listing.image_url %}
                     <img src="{{ listing.image_url }}" alt="{{ listing.title }}" width="200">
                 {% endif %}
 
                 <p>{{ listing.description }}</p>
-                <p>Starting price: ${{ listing.price }}</p>
+                <p>Current price: ${{ listing.price }}</p>
             
             </li>
         {% endfor %}

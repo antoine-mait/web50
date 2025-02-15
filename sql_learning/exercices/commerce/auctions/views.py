@@ -11,8 +11,16 @@ from .models import User , Auction , Watchlist
 
 def index(request):
     listings = Auction.objects.all()  # Fetch all listings from the database
+
+    watchlist_items = set()  # Use a set for quick lookup
+    if request.user.is_authenticated:
+        watchlist, _ = Watchlist.objects.get_or_create(user=request.user)
+        watchlist_items = set(watchlist.listings.values_list("id", flat=True))
+
     return render(request, "auctions/index.html", {
-        "listings": listings  # Pass the listings to the template
+        "listings": listings,  # Pass the listings to the template
+        "MEDIA_URL": settings.MEDIA_URL,
+        "watchlist_items": watchlist_items,        
     })
 
 
@@ -112,4 +120,27 @@ def listing(request, auction_id):
 
 def watchlist(request):
 
-    watchlist = Watchlist.objects.get_or_create(user=request.user)
+    watchlist, created = Watchlist.objects.get_or_create(user=request.user)
+    listing = watchlist.listings.all()
+
+    if request.user.is_authenticated:
+        return render(request, "auctions/watchlist.html", {
+            "listings" : listing ,
+            "MEDIA_URL": settings.MEDIA_URL
+        })
+    else: 
+        return render(request, "auctions/register.html")
+    
+def toggle_watchlist(request, auction_id):
+    if not request.user.is_authenticated:
+        return redirect("login")  # Redirect unauthenticated users to login
+
+    listing = Auction.objects.get(id=auction_id)
+    watchlist, _ = Watchlist.objects.get_or_create(user=request.user)
+
+    if listing in watchlist.listings.all():
+        watchlist.listings.remove(listing)  # Remove if it's in watchlist
+    else:
+        watchlist.listings.add(listing)  # Add if it's not
+
+    return redirect("index")  # Redirect back to index page
