@@ -5,8 +5,11 @@
 
     <ul>
         {% for listing in listings %}
+        <a href="{% url 'listing' listing.id %}">
             <div class="title">
-            <h3>{{ listing.title }}</h3>
+                
+                <h3>{{ listing.title }}</h3>
+                
                 <div class="image-container">
                     {% if user.is_authenticated %}
                         <!-- The image is now wrapped in a form to act as a button -->
@@ -15,8 +18,8 @@
                             
                             <button type="submit" style="border: none; background: transparent; padding: 0;">
                              <!-- Show different text based on whether the item is in the wishlist -->
-                             {% if listing.id in watchlist_items %}
-                                <img class="watchlist" src="{{ MEDIA_URL }}full_star.png" alt="watchlist_star" width="40">
+                             {% if listing.id in watchlist_items_id %}
+                                 <img class="watchlist" src="{{ MEDIA_URL }}full_star.png" alt="watchlist_star" width="40">
                                  <p class="text-overlay">Remove from Watchlist</p>
                              {% else %}
                                  <img class="watchlist" src="{{ MEDIA_URL }}empty_star.png" alt="watchlist_star" width="40">
@@ -36,8 +39,7 @@
 
                 <p>{{ listing.description }}</p>
                 <p>Current price: ${{ listing.price }}</p>
-            
-            </li>
+        </a>
         {% endfor %}
     </ul>
 {% endblock %}

@@ -11,19 +11,22 @@
         <div class="image-container">
             {% if user.is_authenticated %}
                 <!-- The image is now wrapped in a form to act as a button -->
-                <form method="POST">
+                <form method="POST" action="{% url 'toggle_watchlist' page.id %}">
                     {% csrf_token %}
-
-                    <!-- Show different text based on whether the item is in the wishlist -->
-                    {% if listing.id in watchlist_items  %}
-                        <img class="watchlist" src="{{ MEDIA_URL }}full_star.png" alt="watchlist_star" width="40">
-                        <p class="text-overlay">Already in your watch list</p>
-                    {% elif %}
-                        <img class="watchlist" src="{{ MEDIA_URL }}empty_star.png" alt="watchlist_star" width="40">
-                        <p class="text-overlay">Add to your watch list</p>
-                    {% endif %}
+                    <button type="submit" style="border: none; background: transparent; padding: 0;">
+                        {% if page.id in watchlist_items %}
+                            <img class="watchlist" src="{{ MEDIA_URL }}full_star.png" alt="watchlist_star" width="40">
+                            <p class="text-overlay">Already in your watch list</p>
+                        {% else %}
+                            <img class="watchlist" src="{{ MEDIA_URL }}empty_star.png" alt="watchlist_star" width="40">
+                            <p class="text-overlay">Add to your watch list</p>
+                        {% endif %}
+                    </button>
                 </form>
+            {% endif %}
         </div>
+
+        
     </div>
     
     <div>
@@ -37,10 +40,15 @@
     </div>
     
     <div>
-        <form method="POST" enctype="multipart/form-data">
+        <form method="POST" action="{% url 'bid' page.id %}">
             {% csrf_token %}
-            <label for="price">Bid: {{ page.price }} </label>
-            <input type="number" name="bid" step="0.01" min="0.01" placeholder="0.00$" required>
+            <label for="price">Price: {{ page.price }} </label>
+            <div>
+                <label for="bid">
+                    <input type="number" name="bid" step="0.01" min="0.01" placeholder="0.00$" required> 
+                    <button type="submit">Bid</button>
+                </label>
+            </div>
         </form>
     </div>
     
