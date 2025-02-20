@@ -31,9 +31,14 @@
                 {% if listing.image_url %}
                     <img src="{{ listing.image_url }}" alt="{{ listing.title }}" width="200">
                 {% endif %}
-
+                {% if listing.category != None %}
+                     <p> Category :{{ listing.category}} </p>
+                {% endif %}
                 <p>{{ listing.description }}</p>
                 <p>Current price: ${{ listing.price }}</p>
+                {% if listing.closed %}
+                    <p style="color: red;">This auction is closed.</p>
+                {% endif %}
             
             </ul>
         {% endfor %}

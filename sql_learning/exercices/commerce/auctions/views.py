@@ -20,7 +20,6 @@ def index(request):
             # Fetch the IDs of the listings in the watchlist
             watchlist_items_id = watchlist.listings.values_list('id', flat=True)
 
-
     return render(request, "auctions/index.html", {
         "listings": listings,  # Pass the listings to the template
         "MEDIA_URL": settings.MEDIA_URL,
@@ -82,9 +81,15 @@ def create_listing(request):
         description = request.POST.get("description")
         price = request.POST.get("price")
         image_url = request.POST.get("image_url", "")
+        category = request.POST.get("category")
         user=request.user
 
-        auction = Auction(title=title, description=description, price = Decimal(price), image_url=image_url, user=user)
+        auction = Auction(title=title,
+                          description=description, 
+                          price = Decimal(price), 
+                          image_url=image_url, 
+                          category = category,
+                          user=user)
         auction.save()
 
         return redirect("index")
@@ -97,7 +102,10 @@ def listing(request, auction_id):
     except Auction.DoesNotExist:
         raise Http404("Listing not found.")
     
+    listing = get_object_or_404(Auction, id=auction_id)
+    closed = listing.closed
     watchlist_items = set()  # Get watchlist items
+
     if request.user.is_authenticated:
         watchlist, _ = Watchlist.objects.get_or_create(user=request.user)
         watchlist_items = set(watchlist.listings.values_list("id", flat=True))
@@ -111,6 +119,7 @@ def listing(request, auction_id):
         "MEDIA_URL": settings.MEDIA_URL,
         "is_in_watchlist": is_in_watchlist,
         "watchlist_items": watchlist_items,
+        "closed":closed
     })
 
 def watchlist(request):
@@ -121,7 +130,7 @@ def watchlist(request):
     if request.user.is_authenticated:
         return render(request, "auctions/watchlist.html", {
             "listings" : listing ,
-            "MEDIA_URL": settings.MEDIA_URL
+            "MEDIA_URL": settings.MEDIA_URL,
         })
     else: 
         return render(request, "auctions/register.html")
@@ -150,17 +159,54 @@ def bid(request, auction_id):
         return redirect("login")  # Redirect unauthenticated users to login
     
     listing = get_object_or_404(Auction, id=auction_id)
-    current_price = listing.price
-    user_bid = Decimal(request.POST["bid"])
+    closed = listing.closed
 
+    if listing.user == request.user:
+        return render(request, "auctions/listing.html", {
+            "page": listing, 
+            "message_bid": "You cannot bid on your own listing.",  # Display message
+            "closed": closed, 
+            "MEDIA_URL": settings.MEDIA_URL
+        })
+    
+    current_price = listing.price
+    user_bid = request.POST.get("amount")
+
+    # Validate the bid
+    if not user_bid:  # If no bid is provided
+        return render(request, "auctions/listing.html", {
+            "page": listing,
+            "message_bid": "Please enter a valid bid.",
+            "closed": closed,
+            "MEDIA_URL": settings.MEDIA_URL
+        })
+
+    try:
+        user_bid = Decimal(user_bid)  # Convert string input to Decimal
+    except ValueError:
+        return render(request, "auctions/listing.html", {
+            "page": listing,
+            "message_bid": "Invalid bid format.",
+            "closed": closed,
+            "MEDIA_URL": settings.MEDIA_URL
+        })
+
+    # Check if the bid is greater than the current price
     if user_bid <= current_price:
-        raise Http404("Bid must be bigger than the current price")
-        
-     # Save the bid
-    new_bid = Bids(bid=user_bid, auction=listing, user=request.user)
+        return render(request, "auctions/listing.html", {
+            "page": listing,
+            "message_bid": "Bid must be higher than the current price.",
+            "closed": closed,
+            "MEDIA_URL": settings.MEDIA_URL
+        })
+
+    # Save the bid
+    new_bid = Bids(amount=user_bid, auction=listing, user=request.user)
     new_bid.save()
 
-    listing.price = user_bid  # Assign a Decimal, not the bid instance
+    # Update the listing price
+    listing.price = user_bid
+    listing.bidder = request.user
     listing.save()
 
     return redirect(request.META.get("HTTP_REFERER"))
@@ -178,7 +224,10 @@ def my_listing(request, username=None):
     my_listings= Auction.objects.filter(user=user)
 
     watchlist_items = set()
-
+    bidder_auctions = Auction.objects.filter(bidder=user)
+    
+    closed_listings = my_listings.filter(closed=True) 
+    
     if request.user.is_authenticated:
         watchlist, _ = Watchlist.objects.get_or_create(user=request.user)
         watchlist_items = set(watchlist.listings.values_list("id", flat=True))
@@ -188,8 +237,10 @@ def my_listing(request, username=None):
         "my_listings": my_listings,
         "user": user,
         "watchlist_items": watchlist_items,
+        "MEDIA_URL": settings.MEDIA_URL,
+        "bidder":bidder_auctions,
+        "closed_listings":closed_listings,
     })
-
 
 def delete_listing(request, auction_id):
     if not request.user.is_authenticated:
@@ -203,3 +254,34 @@ def delete_listing(request, auction_id):
         pass
     
     return redirect("my_listing")
+
+def close_auction(request , auction_id):
+
+    listing = get_object_or_404(Auction, id=auction_id)
+    auction = Auction.objects.get(id=auction_id)
+
+    if request.user != listing.user:
+        return render(request, "auctions/listing.html", {
+            "page": listing,
+            "message": "Only the auction creator can close this listing.",
+            "MEDIA_URL": settings.MEDIA_URL
+        })
+
+    highest_bid = Bids.objects.filter(auction=listing).order_by("-amount").first()
+
+    if highest_bid:
+        message = f"Auction Ended at {auction.price} $, {highest_bid.user.username} WON!"
+    else:
+        message = "Auction Ended. No bids were placed."
+
+    listing.is_active = False
+    listing.save()
+    auction.closed = True  # Mark it as closed
+    auction.save()
+
+    return render(request, "auctions/listing.html", {
+        "page": listing,
+        "message": message,
+        "MEDIA_URL": settings.MEDIA_URL,
+        "closed":auction.closed,
+    })

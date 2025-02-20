@@ -22,10 +22,7 @@ from auctions import views
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("auctions.urls")),
-    path("create/", views.create_listing, name="create_listing"),
-    path("listing/<int:auction_id>/", views.listing, name="listing"),
-    path("watchlist/toggle/<int:auction_id>/", views.toggle_watchlist, name="toggle_watchlist"),
-
+    path("create_listing", views.create_listing, name="create_listing"),
 ]
 
 if settings.DEBUG:

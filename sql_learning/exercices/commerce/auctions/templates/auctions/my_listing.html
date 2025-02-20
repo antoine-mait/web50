@@ -26,10 +26,10 @@
                                     {% csrf_token %}
                                     <button type="submit" style="border: none; background: transparent; padding: 0;">
                                         {% if listing.id in watchlist_items %}
-                                            <img class="watchlist" src="/media/full_star.png" alt="watchlist_star" width="40">
+                                            <img class="watchlist" src="{{ MEDIA_URL }}full_star.png" alt="watchlist_star" width="40">
                                             <p class="text-overlay">Already in your watch list</p>
                                         {% else %}
-                                            <img class="watchlist" src="/media/empty_star.png" alt="watchlist_star" width="40">
+                                            <img class="watchlist" src="{{ MEDIA_URL }}empty_star.png" alt="watchlist_star" width="40">
                                             <p class="text-overlay">Add to your watch list</p>
                                         {% endif %}
                                     </button>
@@ -41,12 +41,30 @@
                     {% if listing.image_url %}
                         <img src="{{ listing.image_url }}" alt="{{ listing.title }}" width="200">
                     {% endif %}
-
+                    {% if listing.category != None %}
+                        <p> Category :{{ listing.category}} </p>
+                    {% endif %}
                     <p>{{ listing.description }}</p>
                     <p>Current price: ${{ listing.price }}</p>
-                    <p>Last bid : by : </p>
+                    <p>Last bid : ${{ listing.price }} 
+                        {% if listing.bidder %}
+                            by: {{ listing.bidder.username }}
+                        {% else %}
+                            (No bids yet)
+                        {% endif %}
+                    </p>
+              
                     {% if request.user.is_authenticated and request.user == listing.user %}
-
+                        {% if listing.closed %}
+                            <p style="color: red;">This auction is closed.</p>
+                        {% else %}
+                            <form method="POST" action="{% url 'close' listing.id %}">
+                                {% csrf_token %}
+                                <div>
+                                    <button type="submit">Close Auction</button>
+                                </div>
+                            </form>
+                        {% endif %}
                         <form method="POST" action="{% url 'delete_listing' listing.id %}">
                             {% csrf_token %}
                             <button type="submit">Delete listing</button>
