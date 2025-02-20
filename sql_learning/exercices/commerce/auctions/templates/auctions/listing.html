@@ -7,6 +7,7 @@
     
     <div class="title">
         <h2>{{ page.title }}</h2>
+        
 
         <div class="image-container">
             {% if user.is_authenticated %}
@@ -25,10 +26,10 @@
                 </form>
             {% endif %}
         </div>
-
+    
         
     </div>
-    
+    <p>seller : <a> {{ page.user }}</a></p>
     <div>
     {% if page.image_url %}
         <img src="{{ page.image_url }}" alt="{{ page.title }}" width="400">

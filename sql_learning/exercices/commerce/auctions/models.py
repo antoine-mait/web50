@@ -10,6 +10,7 @@ class Auction(models.Model):
     description = models.TextField(max_length=255)
     image_url = models.URLField(blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    user = models.ForeignKey(User, on_delete=models.CASCADE , related_name="auctions", null=True)
 
     def __str__(self):
         return f"{self.id} : Selling {self.title} at {self.price} , {self.description}"

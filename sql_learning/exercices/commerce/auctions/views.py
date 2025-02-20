@@ -11,7 +11,7 @@ from .models import User , Auction , Watchlist , Bids
 
 def index(request):
     listings = Auction.objects.all()  # Fetch all listings from the database
-    watchlist_items = set()  # Use a set for quick lookup
+    watchlist_items_id = None
 
     if request.user.is_authenticated:
         # Fetch the user's watchlist
@@ -20,12 +20,12 @@ def index(request):
             # Fetch the IDs of the listings in the watchlist
             watchlist_items_id = watchlist.listings.values_list('id', flat=True)
 
+
     return render(request, "auctions/index.html", {
         "listings": listings,  # Pass the listings to the template
         "MEDIA_URL": settings.MEDIA_URL,
         "watchlist_items_id": watchlist_items_id,        
     })
-
 
 def login_view(request):
     if request.method == "POST":
@@ -46,11 +46,9 @@ def login_view(request):
     else:
         return render(request, "auctions/login.html")
 
-
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
-
 
 def register(request):
     if request.method == "POST":
@@ -84,8 +82,9 @@ def create_listing(request):
         description = request.POST.get("description")
         price = request.POST.get("price")
         image_url = request.POST.get("image_url", "")
+        user=request.user
 
-        auction = Auction(title=title, description=description, price = Decimal(price), image_url=image_url)
+        auction = Auction(title=title, description=description, price = Decimal(price), image_url=image_url, user=user)
         auction.save()
 
         return redirect("index")
@@ -152,16 +151,55 @@ def bid(request, auction_id):
     
     listing = get_object_or_404(Auction, id=auction_id)
     current_price = listing.price
+    user_bid = Decimal(request.POST["bid"])
 
-    if request.method == "POST":
-        user_bid = Decimal(request.POST["bid"])  # Get bid from form
-    
-        if user_bid <= current_price:
-            raise Http404("Bid must be bigger than the current price")
+    if user_bid <= current_price:
+        raise Http404("Bid must be bigger than the current price")
         
+     # Save the bid
     new_bid = Bids(bid=user_bid, auction=listing, user=request.user)
     new_bid.save()
 
-    print("Received bid:", user_bid)
+    listing.price = user_bid  # Assign a Decimal, not the bid instance
+    listing.save()
 
-    return redirect(request.META.get("HTTP_REFERER", "index"))
+    return redirect(request.META.get("HTTP_REFERER"))
+
+def my_listing(request, username=None):
+    
+    if username is None:
+        if not request.user.is_authenticated:
+            return redirect("login")
+        user = request.user
+    
+    else:
+        user = get_object_or_404(User, username=username)
+
+    my_listings= Auction.objects.filter(user=user)
+
+    watchlist_items = set()
+
+    if request.user.is_authenticated:
+        watchlist, _ = Watchlist.objects.get_or_create(user=request.user)
+        watchlist_items = set(watchlist.listings.values_list("id", flat=True))
+
+
+    return render(request, "auctions/my_listing.html", {
+        "my_listings": my_listings,
+        "user": user,
+        "watchlist_items": watchlist_items,
+    })
+
+
+def delete_listing(request, auction_id):
+    if not request.user.is_authenticated:
+        return redirect("login")
+    
+    try:
+        listing = Auction.objects.get(id=auction_id, user=request.user)  # Make sure it's the user's listing
+        listing.delete()
+    except Auction.DoesNotExist:
+        # Optionally, show an error if the listing does not exist or is not owned by the user
+        pass
+    
+    return redirect("my_listing")
