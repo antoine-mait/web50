@@ -1,68 +1,110 @@
 {% extends "auctions/layout.html" %}
 {% block body %}
-    <h2>{{ page_title }}</h2>
-    
-    <ul>
-        {% for listing in listings %}
-            <ul>
-                <div class="title">
-                    <a href="{% url 'listing' listing.id %}">
-                        <h3>{{ listing.title }}</h3>
-                    </a>
-                    <div class="image-container">
-                        {% if user.is_authenticated and show_watchlist_button %}
-                            <form method="POST" action="{% url 'toggle_watchlist' listing.id %}">
-                                {% csrf_token %}
-                                <button type="submit" style="border: none; background: transparent; padding: 0;">
-                                    {% if listing.id in watchlist_items %}
-                                        <img class="watchlist" src="{{ MEDIA_URL }}full_star.png" alt="watchlist_star" width="40">
-                                        <p class="text-overlay">Remove from Watchlist</p>
-                                    {% else %}
-                                        <img class="watchlist" src="{{ MEDIA_URL }}empty_star.png" alt="watchlist_star" width="40">
-                                        <p class="text-overlay">Add to your watch list</p>
-                                    {% endif %}
-                                </button>
-                            </form>
-                        {% endif %}
-                    </div>
+{% load custom_filters %}
+
+<h2>{{ page_title }}</h2>
+
+<ul>
+    {% for listing in listings %}
+        <li>
+            <div class="title">
+                <a href="{% url 'listing' listing.id %}">
+                    <h3>{{ listing.title }}</h3>
+                </a>
+                
+                <div class="image-container">
+                    {% if user.is_authenticated and show_watchlist_button %}
+                        <form method="POST" action="{% url 'toggle_watchlist' listing.id %}">
+                            {% csrf_token %}
+                            <button type="submit" style="border: none; background: transparent; padding: 0;">
+                                {% if listing.id in watchlist_items %}
+                                    <img class="watchlist" src="{{ MEDIA_URL }}full_star.png" alt="watchlist_star" width="40">
+                                    <p class="text-overlay">Remove from Watchlist</p>
+                                {% else %}
+                                    <img class="watchlist" src="{{ MEDIA_URL }}empty_star.png" alt="watchlist_star" width="40">
+                                    <p class="text-overlay">Add to your watch list</p>
+                                {% endif %}
+                            </button>
+                        </form>
+                    {% endif %}
                 </div>
-                
-                {% if listing.image_url %}
-                    <img src="{{ listing.image_url }}" alt="{{ listing.title }}" width="200">
-                {% endif %}
-                {% if listing.category != None %}
-                    <p>Category: {{ listing.category }}</p>
-                {% endif %}
-                <p>{{ listing.description }}</p>
+            </div>
+            
+            {% if listing.image_url %}
+                <img src="{{ listing.image_url }}" alt="{{ listing.title }}" width="200">
+            {% endif %}
+            
+            {% if listing.user.username != request.resolver_match.kwargs.username %}
+                <p>Seller: 
+                    <a href="{% url 'user_profile' listing.user.username %}">
+                        {{ listing.user.username }}
+                    </a>
+                </p>
+            {% endif %}
+
+            {% if listing.category %}
+                <p>Category: {{ listing.category }}</p>
+            {% endif %}
+
+            <p>{{ listing.description }}</p>
+
+            {% if not listing.closed %}
                 <p>Current price: ${{ listing.price }}</p>
+            {% endif %}
+
+            {% if listing.closed %}
+
+                {% if listing.highest_bid or highest_bids %}
+                    {% if request.path == '/my_listing/'%}
+                        <p>Sold for: ${{ listing.highest_bid.amount }} to {{ listing.highest_bid.user.username }}</p>
+                    
+                        {% if auction_messages|get_item:listing.id %}
+                            <div class="alert alert-info">
+                                {{ auction_messages|get_item:listing.id }}
+                            </div>
+                        {% endif %}
+
+                    {% else %}
+                        <p>Sold for: ${{ listing.price }}</p>
+                    {% endif %}
+            
+                {% else %}
+                    <p>No bids placed</p>
+                {% endif %} 
                 
-                {% if listing.closed %}
-                    <p style="color: red;">This auction is closed.</p>
+            <p style="color: red;">This auction is closed.</p>
+            {% endif %}
+            
+            {% if not listing.closed and listing.user != request.user %}
+                <form method="POST" action="{% url 'bid' listing.id %}">
+                    {% csrf_token %}
+                    <label for="amount">
+                        <input type="number" name="amount" step="0.01" min="0.01" placeholder="0.00$" required>
+                        <button type="submit">Bid</button>
+                    </label>
+                </form>
+            {% endif %}
+            
+            {% if not listing.closed and request.user == listing.user %}
+                <form method="POST" action="{% url 'close' listing.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Close Auction</button>
+                </form>
+                {% if message %}
+                    <div class="alert alert-warning">{{ message }}</div>
                 {% endif %}
-                
-                {% if show_bid_section and not listing.closed %}
-                    <form method="POST" action="{% url 'bid' listing.id %}">
-                        {% csrf_token %}
-                        <label for="amount">
-                            <input type="number" name="amount" step="0.01" min="0.01" placeholder="0.00$" required>
-                            <button type="submit">Bid</button>
-                        </label>
-                    </form>
-                {% endif %}
-                
-                {% if show_manage_buttons and request.user == listing.user %}
-                    <form method="POST" action="{% url 'close' listing.id %}">
-                        {% csrf_token %}
-                        <button type="submit">Close Auction</button>
-                    </form>
-                    <form method="POST" action="{% url 'delete_listing' listing.id %}">
-                        {% csrf_token %}
-                        <button type="submit">Delete listing</button>
-                    </form>
-                {% endif %}
-            </ul>
-        {% empty %}
-            <p>Nothing here.</p>
-        {% endfor %}
-    </ul>
+            {% endif %}
+            
+            {% if request.user == listing.user %}
+                <form method="POST" action="{% url 'delete_listing' listing.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Delete listing</button>
+                </form>
+            {% endif %}
+        </li>
+    {% empty %}
+        <p>Nothing here.</p>
+    {% endfor %}
+</ul>
+
 {% endblock %}
