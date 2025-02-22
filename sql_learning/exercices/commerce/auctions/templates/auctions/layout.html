@@ -12,6 +12,7 @@
         <div>
             {% if user.is_authenticated %}
                 Signed in as <strong>{{ request.user.username }}</strong>.
+
             {% else %}
                 Not signed in.
             {% endif %}

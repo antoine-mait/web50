@@ -2,10 +2,11 @@ from django.contrib.auth import authenticate, login, logout
 from django.conf import settings
 from django.db import IntegrityError
 from django.shortcuts import render, redirect, get_object_or_404
-from .utils import get_highest_bid
+from .utils import get_highest_bid , get_bidder
 from django.urls import reverse
+from django.contrib import messages
 from decimal import Decimal
-from .models import User, Auction, Watchlist, Bids
+from .models import User, Auction, Watchlist, Bids , WonAuction
 
 def render_page(request, template, **context):
     return render(request, template, {"MEDIA_URL": settings.MEDIA_URL, **context})
@@ -13,36 +14,60 @@ def render_page(request, template, **context):
 def index(request):
     listings = Auction.objects.all()
     watchlist_items = set()
-    highest_bids = {}
 
     if request.user.is_authenticated:
         watchlist, _ = Watchlist.objects.get_or_create(user=request.user)
         watchlist_items = set(watchlist.listings.values_list("id", flat=True))
 
-    # Fetch highest bid for each listing
-    for listing in listings:
-        highest_bids[listing.id] = get_highest_bid(listing)
+        won_auction_ids = request.session.get("won_auction_ids", set())
+        new_wins = []
 
+        won_auctions = WonAuction.objects.filter(user=request.user, auction__id__in=won_auction_ids)
+
+        for listing in listings:
+            listing.highest_bid = get_highest_bid(listing)
+            listing.bidder = get_bidder(listing)
+
+            # If user is the highest bidder and the auction is closed
+            if listing.bidder == request.user and listing.closed:
+                if listing.id not in won_auction_ids:  # New win
+                    new_wins.append(listing.id)
+                    WonAuction.objects.create(user=request.user, auction=listing) 
+
+                    if not request.session.get("seen_win_message", False):
+                        messages.success(request, f"You won the auction for {listing.title}!")
+                        request.session["seen_win_message"] = True  # Mark that the win message was shown
+
+
+        # Store the updated list in session
+        if new_wins:
+            won_auction_ids = list(won_auction_ids.union(new_wins))
+            request.session["won_auctions_ids"] = won_auction_ids
+
+        
     return render(request, "auctions/product_page.html", {
         "listings": listings,
         "MEDIA_URL": settings.MEDIA_URL,
         "watchlist_items": watchlist_items,  
         "show_watchlist_button": request.user.is_authenticated,
-        "highest_bids": highest_bids,  # Pass the highest bids
     })
 
 
 def login_view(request):
     if request.method == "POST":
-        user = authenticate(request, username=request.POST["username"], password=request.POST["password"])
+        # Handle login logic
+        user = authenticate(username=request.POST["username"], password=request.POST["password"])
         if user:
             login(request, user)
-            return redirect("index")
-        return render_page(request, "auctions/login.html", message="Invalid username and/or password.")
-    return render_page(request, "auctions/login.html")
+            messages.success(request, f"Welcome back, {user.username}!")
+            request.session["seen_win_message"] = False
+            request.session.pop("seen_win_message", None) 
+            return redirect("index")  # Redirect to the homepage or any page
+    return render(request, "auctions/login.html")
 
 def logout_view(request):
     logout(request)
+    request.session.pop("won_auction_ids", None)
     return redirect("index")
 
 def register(request):
@@ -82,6 +107,7 @@ def listing(request, auction_id):
 
     is_in_watchlist = listing.id in watchlist_items if request.user.is_authenticated else False
     show_watchlist_button = request.user.is_authenticated  # Afficher le bouton seulement si l'utilisateur est connecté
+    
     listing.highest_bid = get_highest_bid(listing)
 
     return render(request, "auctions/product_page.html", {
@@ -91,14 +117,22 @@ def listing(request, auction_id):
         "watchlist_items": watchlist_items,
         "closed": closed,
         "show_watchlist_button": show_watchlist_button,
-        "highest_bids": listing.highest_bid,  # Pass the highest bid for this specific listing
     })
 
 
 def watchlist(request):
     watchlist, _ = Watchlist.objects.get_or_create(user=request.user)
     listings = watchlist.listings.all()
+    if not request.user.is_authenticated:
+        return redirect("login")
     
+    # Fetch highest bid for each listing
+    for listing in listings:
+            listing.highest_bid = get_highest_bid(listing)
+            listing.bidder = get_bidder(listing)  # Now this returns a User object
+            print(f"Listing: {listing.title}, Highest Bid: {listing.highest_bid}, Bidder: {listing.bidder}")
+
+
     return render(request, "auctions/product_page.html", {
         "listings": listings,
         "MEDIA_URL": settings.MEDIA_URL,

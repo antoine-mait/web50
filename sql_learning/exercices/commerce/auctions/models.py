@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser , User
 from django.db import models
 
 CATEGORY_CHOICES = [
@@ -33,8 +33,8 @@ class Watchlist(models.Model):
     def __str__(self):
         return f"Watch list of {self.user.username}"
 
-class Comment():
-    print("test")
+# class Comment():
+#     print("test")
 
 class Bids(models.Model):
     auction = models.ForeignKey(Auction, on_delete=models.CASCADE, related_name="bids")
@@ -44,3 +44,11 @@ class Bids(models.Model):
 
     def __str__(self):
         return f"Bid by {self.user.username} on {self.auction.title} - {self.amount}"
+    
+class WonAuction(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    auction = models.ForeignKey(Auction, on_delete=models.CASCADE)
+    date_won = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} won {self.auction.title}"

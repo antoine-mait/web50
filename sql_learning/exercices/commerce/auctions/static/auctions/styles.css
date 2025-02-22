@@ -37,3 +37,32 @@ body {
     padding: 5px 10px;
     cursor: pointer;
 }
+
+.popup-container {
+    display: none; /* Hide it by default */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 20px 30px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 18px;
+    z-index: 1000;
+    opacity: 1;
+    animation: fadeout 5s ease-out forwards;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    max-width: 80%;
+}
+
+.popup-container:has(.popup p) {
+    display: block;
+}
+
+@keyframes fadeout {
+    0% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { opacity: 0; }
+}
