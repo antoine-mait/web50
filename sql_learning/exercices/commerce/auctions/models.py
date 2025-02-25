@@ -44,6 +44,8 @@ class Bids(models.Model):
 
     def __str__(self):
         return f"Bid by {self.user.username} on {self.auction.title} - {self.amount}"
+    class Meta:
+        verbose_name_plural = "Bids"  # Specify the correct plural name here
     
 class WonAuction(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

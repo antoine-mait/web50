@@ -34,15 +34,14 @@ def index(request):
                     new_wins.append(listing.id)
                     WonAuction.objects.create(user=request.user, auction=listing) 
 
-                    if not request.session.get("seen_win_message", False):
-                        messages.success(request, f"You won the auction for {listing.title}!")
-                        request.session["seen_win_message"] = True  # Mark that the win message was shown
-
-
-        # Store the updated list in session
         if new_wins:
-            won_auction_ids = list(won_auction_ids.union(new_wins))
-            request.session["won_auctions_ids"] = won_auction_ids
+            for win_id in new_wins:
+                listing = Auction.objects.get(id=win_id)
+                messages.success(request, f"You won the auction for {listing.title}!")
+
+            # Update session with new wins
+            won_auction_ids.update(new_wins)
+            request.session["won_auction_ids"] = list(won_auction_ids)
 
         
     return render(request, "auctions/product_page.html", {
@@ -60,14 +59,16 @@ def login_view(request):
         if user:
             login(request, user)
             messages.success(request, f"Welcome back, {user.username}!")
+            
             request.session["seen_win_message"] = False
-            request.session.pop("seen_win_message", None) 
+
             return redirect("index")  # Redirect to the homepage or any page
     return render(request, "auctions/login.html")
 
 def logout_view(request):
     logout(request)
     request.session.pop("won_auction_ids", None)
+    request.session.pop("seen_win_message", None)  # Clear seen message state
     return redirect("index")
 
 def register(request):
@@ -112,6 +113,7 @@ def listing(request, auction_id):
 
     return render(request, "auctions/product_page.html", {
         "listings": [listing],
+        "listing_id": listing,
         "MEDIA_URL": settings.MEDIA_URL,
         "is_in_watchlist": is_in_watchlist,
         "watchlist_items": watchlist_items,
@@ -200,31 +202,20 @@ def my_listing(request, username=None):
                     )
 
 def close_auction(request, auction_id):
-
-    listing = get_object_or_404(Auction, id=auction_id)
-    
-    if request.user != listing.user:
-        return render_page(request, "auctions/product_page.html", 
-                           page=listing, 
-                           message="Only the creator can close this auction.")
-    
-    listing.closed = True
-    listing.save()
-
-    highest_bid = Bids.objects.filter(auction=listing).order_by("-amount").first()
-    
-    if highest_bid:
-        message = f"Auction closed at {listing.price}$. {highest_bid.user.username} won!"
+    auction = get_object_or_404(Auction, id=auction_id)
+    if auction.user == request.user and not auction.closed:
+        auction.closed = True
+        auction.save()
+        messages.success(request, "Auction has been closed successfully.")
     else:
-        message = "Auction closed. No bids placed."
-    
-    # Store the message in the session
-    request.session[f'auction_message_{auction_id}'] = message
-    return redirect(reverse("my_listing"))
+        messages.error(request, "You are not authorized to close this auction.")
+    return redirect('listing', auction_id=auction.id)
 
 def delete_listing(request, auction_id):
-
-    if request.user.is_authenticated:
-        Auction.objects.filter(id=auction_id, user=request.user).delete()
-    return redirect("my_listing")
-
+    auction = get_object_or_404(Auction, id=auction_id)
+    if auction.user == request.user:
+        auction.delete()
+        messages.success(request, "Listing has been deleted.")
+    else:
+        messages.error(request, "You are not authorized to delete this listing.")
+    return redirect('my_listing')

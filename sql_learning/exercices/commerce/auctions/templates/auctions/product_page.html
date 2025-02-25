@@ -95,7 +95,10 @@
                     </label>
                 </form>
             {% endif %}
-            {% if request.path == '/my_listing/'%}
+            {% url 'listing' listing_id.id as listing_url %}                
+
+            {% if request.path == '/my_listing/' or request.path == listing_url %}
+
                 {% if not listing.closed and request.user == listing.user %}
                     <form method="POST" action="{% url 'close' listing.id %}">
                         {% csrf_token %}
