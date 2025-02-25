@@ -66,3 +66,51 @@ body {
     80% { opacity: 1; }
     100% { opacity: 0; }
 }
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Hide the dropdown content by default */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 160px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+/* Style for the options */
+.dropdown-content select {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-size: 16px;
+    padding: 5px;
+}
+
+/* Show the dropdown content when hovering over the parent */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Style for the dropdown link */
+.nav-item {
+    list-style: none;
+    display: inline-block;
+}
+
+.nav-link {
+    text-decoration: none;
+    padding: 10px;
+    display: block;
+    background-color: lightgray;
+    color: black;
+}
+
+.nav-link:hover {
+    background-color: gray;
+    color: white;
+}

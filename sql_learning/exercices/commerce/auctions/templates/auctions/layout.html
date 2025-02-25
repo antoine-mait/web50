@@ -21,6 +21,22 @@
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
             </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link" href="#">Categories</a>
+                <div class="dropdown-content">
+                    <form action="{% url 'listing_category' category='fashion' %}" method="get" id="categoryForm">
+                        <select name="category" id="category" onchange="window.location.href=this.value;">
+                            <option value="" selected disabled>Category</option>
+                            <option value="{% url 'listing_category' category='fashion' %}">Fashion</option>
+                            <option value="{% url 'listing_category' category='toys' %}">Toys</option>
+                            <option value="{% url 'listing_category' category='electronics' %}">Electronics</option>
+                            <option value="{% url 'listing_category' category='home' %}">Home</option>
+                            <option value="{% url 'listing_category' category='other' %}">Other</option>
+                        </select>
+                    </form>
+                </div>
+            </li>
+
             {% if user.is_authenticated %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'create_listing' %}">Create listing</a>

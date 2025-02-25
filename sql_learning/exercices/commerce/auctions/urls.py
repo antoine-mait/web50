@@ -21,6 +21,8 @@ urlpatterns = [
     path("delete_listing/<int:auction_id>/", views.delete_listing, name="delete_listing"),
     
     path("close/<int:auction_id>/", views.close_auction, name="close"),
+    
+    path("category/<str:category>/",views.index, name="listing_category"),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

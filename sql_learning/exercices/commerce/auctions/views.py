@@ -11,8 +11,12 @@ from .models import User, Auction, Watchlist, Bids , WonAuction
 def render_page(request, template, **context):
     return render(request, template, {"MEDIA_URL": settings.MEDIA_URL, **context})
 
-def index(request):
-    listings = Auction.objects.all()
+def index(request, category=None):
+    if category:
+        listings = Auction.objects.filter(category=category)  # Filter listings by category
+    else:
+        listings = Auction.objects.all()  # Show all listings if no category is specified
+
     watchlist_items = set()
 
     if request.user.is_authenticated:
@@ -50,7 +54,6 @@ def index(request):
         "watchlist_items": watchlist_items,  
         "show_watchlist_button": request.user.is_authenticated,
     })
-
 
 def login_view(request):
     if request.method == "POST":
@@ -119,8 +122,7 @@ def listing(request, auction_id):
         "watchlist_items": watchlist_items,
         "closed": closed,
         "show_watchlist_button": show_watchlist_button,
-    })
-
+    })      
 
 def watchlist(request):
     watchlist, _ = Watchlist.objects.get_or_create(user=request.user)
