@@ -6,7 +6,7 @@ from .utils import get_highest_bid , get_bidder
 from django.urls import reverse
 from django.contrib import messages
 from decimal import Decimal
-from .models import User, Auction, Watchlist, Bids , WonAuction
+from .models import User, Auction, Watchlist, Bids , WonAuction , Comment
 
 def render_page(request, template, **context):
     return render(request, template, {"MEDIA_URL": settings.MEDIA_URL, **context})
@@ -221,3 +221,10 @@ def delete_listing(request, auction_id):
     else:
         messages.error(request, "You are not authorized to delete this listing.")
     return redirect('my_listing')
+
+def comment(request , auction_id):
+    if request.method == "POST": 
+        Comment.objects.create(
+            user=request.user,
+            content=request.POST.get("content"),
+        )
