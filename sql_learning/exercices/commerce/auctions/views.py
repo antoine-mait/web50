@@ -104,6 +104,7 @@ def listing(request, auction_id):
     listing = get_object_or_404(Auction, id=auction_id)
     closed = listing.closed
     watchlist_items = set()
+    comments = Comment.objects.filter(post=listing)
 
     if request.user.is_authenticated:
         watchlist, _ = Watchlist.objects.get_or_create(user=request.user)
@@ -122,6 +123,7 @@ def listing(request, auction_id):
         "watchlist_items": watchlist_items,
         "closed": closed,
         "show_watchlist_button": show_watchlist_button,
+        "comments" : comments,
     })      
 
 def watchlist(request):
@@ -223,8 +225,32 @@ def delete_listing(request, auction_id):
     return redirect('my_listing')
 
 def comment(request , auction_id):
+
+    auction = get_object_or_404(Auction, id=auction_id)
+
     if request.method == "POST": 
-        Comment.objects.create(
-            user=request.user,
-            content=request.POST.get("content"),
-        )
+        comment_content = request.POST.get("comment")
+        print(f"Received comment: {comment_content}")
+
+        if comment_content: 
+            Comment.objects.create(
+                user=request.user,
+                content=comment_content,
+                post=auction
+            )
+            return redirect('listing', auction_id=auction_id)
+        else:
+            print("No comment content provided.")  # Debug line
+    
+    comments = Comment.objects.filter(post=auction)
+
+    return render(request, "auctions/product_page.html", {
+        "auction" : auction,
+        "comments":comments,  
+    })
+
+# def edit_comment():
+
+
+
+# def delet_comment():

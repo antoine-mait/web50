@@ -54,9 +54,9 @@ class WonAuction(models.Model):
     
 class Comment(models.Model):
     content = models.TextField(max_length=255)
-    created_at = models.DateTimeField(auto_now_add=True)
+    post_time = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Auction, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"Comment by {self.user.username} on {self.post.title}"
+        return f"Comment by {self.user.username} on {self.post.title} : {self.content}"

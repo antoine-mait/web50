@@ -118,6 +118,26 @@
                     </form>
                 {% endif %}
             {% endif %}
+            {% if request.path == listing_url %}        
+                <div>
+                    <label for="content">Leave a comment on this auction : </label>
+                        <form method="POST" action="{% url 'comment' listing.id %}">
+                        {% csrf_token %}
+                            <textarea type="text" name="comment" required></textarea>
+                            <button type="submit">Post a comment</button>
+                        </form>
+                </div>
+            {% endif %}
+            {% if request.path == listing_url %}
+                <div>
+                    {% for comment in comments %}
+                        <p>{{ comment.user }} at {{ comment.post_time }}</p>
+                        <p>{{ comment.content }}</p>
+                    {% empty %}
+                        <p>No comments yet.</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
         </li>
     {% empty %}
         <p>Nothing here.</p>
