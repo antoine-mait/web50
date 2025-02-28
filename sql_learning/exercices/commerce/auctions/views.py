@@ -115,6 +115,22 @@ def listing(request, auction_id):
     
     listing.highest_bid = get_highest_bid(listing)
 
+    if request.method == 'POST' and 'comment_id' in request.POST:
+        comment_id = request.POST['comment_id']
+        comment = get_object_or_404(Comment, id=comment_id)
+
+        # Ensure the user is the one who posted the comment
+        if comment.user == request.user:
+            new_content = request.POST.get('comment')
+            if new_content:
+                comment.content = new_content
+                comment.save()
+                messages.success(request, "Your comment has been updated.")
+            else:
+                messages.error(request, "Please enter a valid comment.")
+        
+        return redirect('listing', auction_id=auction_id)
+    
     return render(request, "auctions/product_page.html", {
         "listings": [listing],
         "listing_id": listing,
@@ -230,7 +246,6 @@ def comment(request , auction_id):
 
     if request.method == "POST": 
         comment_content = request.POST.get("comment")
-        print(f"Received comment: {comment_content}")
 
         if comment_content: 
             Comment.objects.create(
@@ -238,6 +253,8 @@ def comment(request , auction_id):
                 content=comment_content,
                 post=auction
             )
+
+
             return redirect('listing', auction_id=auction_id)
         else:
             print("No comment content provided.")  # Debug line
@@ -249,8 +266,12 @@ def comment(request , auction_id):
         "comments":comments,  
     })
 
-# def edit_comment():
+def delete_comment(request , auction_id , comment_id):
 
-
-
-# def delet_comment():
+    comment = get_object_or_404(Comment, id=comment_id)
+    if comment.user == request.user:
+        comment.delete()
+        messages.success(request, "Comment has been deleted.")
+    else:
+        messages.error(request, "You are not authorized to delete this listing.")
+    return redirect('listing', auction_id=auction_id)

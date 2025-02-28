@@ -36,7 +36,7 @@
                             {% endif %}
                         </button>
                     </form>
-            </div>
+                </div>
             </div>
             
             {% if listing.image_url %}
@@ -129,15 +129,34 @@
                 </div>
             {% endif %}
             {% if request.path == listing_url %}
-                <div>
-                    {% for comment in comments %}
-                        <p>{{ comment.user }} at {{ comment.post_time }}</p>
-                        <p>{{ comment.content }}</p>
-                    {% empty %}
-                        <p>No comments yet.</p>
-                    {% endfor %}
-                </div>
+            <div>
+                {% for comment in comments %}
+                    <p>{{ comment.user }} at {{ comment.post_time }}</p>
+                    <p>{{ comment.content }}</p>
+        
+                    {% if request.user == comment.user %}
+                        <!-- Delete Comment -->
+                        <div>
+                            <form method="POST" action="{% url 'delete_comment' listing.id comment.id %}">
+                                {% csrf_token %}
+                                <button type="submit">Delete comment</button>
+                            </form>
+                        </div>
+                        
+                        <!-- Edit Comment -->
+                        <form method="POST">
+                            {% csrf_token %}
+                            <textarea name="comment" rows="4" cols="50">{{ comment.content }}</textarea><br>
+                            <input type="hidden" name="comment_id" value="{{ comment.id }}">
+                            <button type="submit">Update Comment</button>
+                        </form>
+                    {% endif %}
+                {% empty %}
+                    <p>No comments yet.</p>
+                {% endfor %}
+            </div>
             {% endif %}
+        
         </li>
     {% empty %}
         <p>Nothing here.</p>

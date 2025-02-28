@@ -12,7 +12,7 @@ urlpatterns = [
     path("register", views.register, name="register"),
     path("create_listing", views.create_listing, name="create_listing"),
     path("listing/<int:auction_id>/", views.listing, name="listing"),
-    path("listing/<int:auction_id>/comment", views.comment, name="comment"),
+    
 
     path("my_listing/", views.my_listing, name="my_listing"),
     path("<str:username>/", views.my_listing, name="user_profile"),
@@ -24,6 +24,9 @@ urlpatterns = [
     path("close/<int:auction_id>/", views.close_auction, name="close"),
     
     path("category/<str:category>/",views.index, name="listing_category"),
+
+    path("listing/<int:auction_id>/comment", views.comment, name="comment"),
+    path("listing/<int:auction_id>/delete_comment/<int:comment_id>", views.delete_comment, name="delete_comment"),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
