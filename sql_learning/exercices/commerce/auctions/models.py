@@ -25,7 +25,6 @@ class Auction(models.Model):
     def __str__(self):
         return f"{self.id} : Selling {self.title} at {self.price} , {self.description}"
     
-
 class Watchlist(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     listings = models.ManyToManyField(Auction)
@@ -56,7 +55,7 @@ class Comment(models.Model):
     content = models.TextField(max_length=255)
     post_time = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    post = models.ForeignKey(Auction, on_delete=models.CASCADE)
+    post = models.ForeignKey(Auction, on_delete=models.CASCADE, related_name="comments")
 
     def __str__(self):
-        return f"Comment by {self.user.username} on {self.post.title} : {self.content}"
+        return f"Comment by {self.user.username} on {self.post.title} : '  {self.content} '"

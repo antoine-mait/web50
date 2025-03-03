@@ -115,6 +115,8 @@ def listing(request, auction_id):
     
     listing.highest_bid = get_highest_bid(listing)
 
+    minimum_bid = listing.price + Decimal("0.01")
+
     if request.method == 'POST' and 'comment_id' in request.POST:
         comment_id = request.POST['comment_id']
         comment = get_object_or_404(Comment, id=comment_id)
@@ -140,6 +142,7 @@ def listing(request, auction_id):
         "closed": closed,
         "show_watchlist_button": show_watchlist_button,
         "comments" : comments,
+        "minimum_bid":minimum_bid,
     })      
 
 def watchlist(request):
@@ -174,19 +177,31 @@ def toggle_watchlist(request, auction_id):
     return redirect("login")
 
 def bid(request, auction_id):
+
     if not request.user.is_authenticated:
         return redirect("login")
+    
     listing = get_object_or_404(Auction, id=auction_id)
+
     try:
         user_bid = Decimal(request.POST.get("amount", ""))
-        if user_bid > listing.price:
-            Bids.objects.create(amount=user_bid, auction=listing, user=request.user)
-            listing.price, listing.bidder = user_bid, request.user
-            listing.save()
-            return redirect(request.META.get("HTTP_REFERER"))
+
+        if user_bid <= listing.price:
+            return render_page(request, "auctions/product_page.html", 
+                               page=listing,
+                               message_bid="Bid must be strictly higher than the current price.")
+        
+        
+        Bids.objects.create(amount=user_bid, auction=listing, user=request.user)
+        listing.price, listing.bidder = user_bid, request.user
+        listing.save()
+
+        return redirect('listing', auction_id=auction_id)
+
     except (ValueError, TypeError):
         pass
-    return render_page(request, "auctions/product_page.html", page=listing, message_bid="Invalid bid or bid too low.")
+    return render_page(request, "auctions/product_page.html", page=listing,
+                        message_bid="Invalid bid or bid too low.")
 
 def my_listing(request, username=None):
     user = get_object_or_404(User, username=username) if username else request.user
@@ -244,6 +259,9 @@ def comment(request , auction_id):
 
     auction = get_object_or_404(Auction, id=auction_id)
 
+    if not request.user.is_authenticated:
+        return redirect("login")
+    
     if request.method == "POST": 
         comment_content = request.POST.get("comment")
 
