@@ -89,16 +89,21 @@ def register(request):
 
 def create_listing(request):
     if request.method == "POST":
+        price = Decimal(request.POST.get("price"))  # Store user's price input
+
         Auction.objects.create(
             title=request.POST.get("title"),
             description=request.POST.get("description"),
-            price=Decimal(request.POST.get("price")),
+            price=price,  # Set initial price
+            starting_price=price,  # Save starting price separately
             image_url=request.POST.get("image_url", ""),
             category=request.POST.get("category"),
             user=request.user
         )
         return redirect("index")
+
     return render_page(request, "auctions/create_listing.html")
+
 
 def listing(request, auction_id):
     listing = get_object_or_404(Auction, id=auction_id)
