@@ -12,6 +12,16 @@
     <hr>
 
     <div id="emails-view">
+        <p>Sent by you</p>
+        {% if mailbox == sent and request.user == email.sender%}
+            <p>Sent by you</p>
+        {% endif %}
+        {% if mailbox == inbox and request.user != email.sender%}
+            <p>Sent to you</p>
+        {% endif %}
+        {% if mailbox == archived and email.archived == true%}
+            <p>archived by you</p>
+        {% endif %}
     </div>
 
     <div id="compose-view">
