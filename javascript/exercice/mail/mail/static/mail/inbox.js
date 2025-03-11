@@ -30,6 +30,7 @@ function load_mailbox(mailbox) {
   // Show the mailbox and hide other views
   document.querySelector('#emails-view').style.display = 'block';
   document.querySelector('#compose-view').style.display = 'none';
+  document.querySelector("#email-view").style.display = "none";
 
   // Show the mailbox name
   document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
@@ -104,6 +105,26 @@ function show_email(email , mailbox){
   }
 
   document.querySelector("#emails-view").appendChild(emailDiv);
+  // Open specific email 
+  emailDiv.onclick = () => open_email(email.id);
 
+}
 
+function open_email(email_id) {
+  // Hide email list
+  document.querySelector("#emails-view").style.display = "none";
+  document.querySelector("#email-view").style.display = "block";
+
+  fetch(`/emails/${email_id}`)
+    .then(response => response.json())
+    .then(email => {
+      console.log("Opened Email:", email);
+
+      // Populate email details
+      document.querySelector("#email-sender").innerHTML = `From: ${email.sender}`;
+      document.querySelector("#email-recipients").innerHTML = `To: ${email.recipients}`;
+      document.querySelector("#email-subject").innerHTML = `Object: ${email.subject}`;
+      document.querySelector("#email-timestamp").innerHTML = `Time: ${email.timestamp}`;
+      document.querySelector("#email-body").innerHTML = email.body;
+    });
 }

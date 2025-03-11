@@ -4,31 +4,31 @@ textarea {
 
 #emails-view {
     display: flex;
-    flex-direction: column;  /* Align child elements vertically */
-    gap: 10px;  /* Space between each email */
+    flex-direction: column;  
+    gap: 10px; 
     padding: 10px
 }
 
 .email-entry {
-    display: grid;  /* Use grid layout */
-    grid-template-columns: repeat(3, 1fr);  /* 4 equal-width columns */
-    gap: 10px;  /* Space between the columns */
-    border: 2px solid #ccc;  /* Border to box the email entry */
-    padding: 10px;  /* Add padding inside the box */
-    border-radius: 5px;  /* Rounded corners */
-    background-color: #f9f9f9;  /* Light background color */
+    display: grid;  
+    grid-template-columns: repeat(3, 1fr);  
+    gap: 10px;  
+    border: 2px solid #ccc; 
+    padding: 10px;  
+    border-radius: 5px;  
+    background-color: #f9f9f9;  
 }
 
-.email-entry p {
+.email-entry p{
     margin: 0;
-    word-wrap: break-word;  /* Ensures long words break properly */
-    overflow: hidden;  /* Hides overflowed text */
-    text-overflow: ellipsis;  /* Adds "..." at the end of the text if it overflows */
-    white-space: nowrap;  /* Prevents text from wrapping */
-    max-width: 100%;  /* Ensures the text won't exceed the column's width */
+    word-wrap: break-word;  
+    overflow: hidden;  
+    text-overflow: ellipsis;  
+    white-space: nowrap;  
+    max-width: 100%;  
     text-overflow: ellipsis;
 }
 
 .email-entry:hover {
-    background-color: #eaeaea;  /* Hover effect */
+    background-color: #eaeaea; 
 }
