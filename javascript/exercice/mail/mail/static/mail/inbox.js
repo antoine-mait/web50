@@ -67,8 +67,43 @@ function send_email(){
 }
 
 function show_email(email , mailbox){
-  console.log(mailbox);
-  if(mailbox == "sent"){
-    console.log("hi")
+  const user = document.querySelector('#user_mail').innerText;
+  console.log("Logged-in user:", user);
+
+  // Create a new div for the email entry
+  const emailDiv = document.createElement("div");
+  emailDiv.className = "email-entry"; 
+
+  const sender = document.createElement("p");
+  sender.className = "sender"; 
+  sender.innerHTML = `From : ${email.sender}`;
+
+  const recipients = document.createElement("p");
+  recipients.className = "recipients"; 
+  recipients.innerHTML = `To : ${email.recipients}`;
+  
+  const subject = document.createElement("p");
+  subject.className = "subject"; 
+  subject.innerHTML = `Object : ${email.subject}`;
+
+  const timestamp = document.createElement("p");
+  timestamp.className = "timestamp"; 
+  timestamp.innerHTML = `Time : ${email.timestamp}`;
+
+  const body = document.createElement("p");
+  body.className = "body"; 
+  body.innerHTML = `Body : ${email.body}`;
+
+
+  if(mailbox === "sent" && email.sender === user){
+    emailDiv.append(recipients, subject, timestamp);
   }
+
+  if(mailbox === "inbox"){
+    emailDiv.append(sender, subject, timestamp);
+  }
+
+  document.querySelector("#emails-view").appendChild(emailDiv);
+
+
 }

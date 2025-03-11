@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block body %}
-    <h2>{{ request.user.email }}</h2>
+    <h2 id = "user_mail">{{ request.user.email }}</h2>
 
     <button class="btn btn-sm btn-outline-primary" id="inbox">Inbox</button>
     <button class="btn btn-sm btn-outline-primary" id="compose">Compose</button>
@@ -12,16 +12,7 @@
     <hr>
 
     <div id="emails-view">
-        <p>Sent by you</p>
-        {% if mailbox == sent and request.user == email.sender%}
-            <p>Sent by you</p>
-        {% endif %}
-        {% if mailbox == inbox and request.user != email.sender%}
-            <p>Sent to you</p>
-        {% endif %}
-        {% if mailbox == archived and email.archived == true%}
-            <p>archived by you</p>
-        {% endif %}
+
     </div>
 
     <div id="compose-view">
