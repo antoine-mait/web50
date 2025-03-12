@@ -2,6 +2,10 @@ textarea {
     min-height: 400px;
 }
 
+:root{
+
+    --hover_color : #383838;
+}
 #emails-view {
     display: flex;
     flex-direction: column;  
@@ -11,12 +15,13 @@ textarea {
 
 .email-entry {
     display: grid;  
-    grid-template-columns: repeat(3, 1fr);  
+    grid-template-columns: 1fr 1fr 1fr 5% 5%;  
     gap: 10px;  
     border: 2px solid #ccc; 
     padding: 10px;  
     border-radius: 5px;  
-    background-color: #f9f9f9;  
+    max-width: 100%;
+    background-color: grey;  
 }
 
 .email-entry p{
@@ -29,6 +34,19 @@ textarea {
     text-overflow: ellipsis;
 }
 
+.email-entry.read {
+    background-color: white; /* For read emails */
+  }
+
+  .email-entry.read:hover {
+    background-color: var(--hover_color); 
+}
+
 .email-entry:hover {
-    background-color: #eaeaea; 
+    background-color:var(--hover_color); 
+}
+
+.icon1, .icon2 {
+    width: 30px;  /* Set the width to 20px */
+    height: 30px; /* Set the height to 20px */
 }
