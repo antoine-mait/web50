@@ -21,7 +21,7 @@ textarea {
     padding: 10px;  
     border-radius: 5px;  
     max-width: 100%;
-    background-color: grey;  
+    background-color: white;  
 }
 
 .email-entry p{
@@ -35,7 +35,7 @@ textarea {
 }
 
 .email-entry.read {
-    background-color: white; /* For read emails */
+    background-color: grey; /* For read emails */
   }
 
   .email-entry.read:hover {
