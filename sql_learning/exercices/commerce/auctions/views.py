@@ -104,7 +104,6 @@ def create_listing(request):
 
     return render_page(request, "auctions/create_listing.html")
 
-
 def listing(request, auction_id):
     listing = get_object_or_404(Auction, id=auction_id)
     closed = listing.closed

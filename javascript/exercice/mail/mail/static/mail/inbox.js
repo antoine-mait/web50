@@ -77,10 +77,10 @@ function send_email(){
   .then(response => response.json())
   .then(result => {
       console.log(result);
+      localStorage.clear();
+      load_mailbox('sent');
   })
-
-  localStorage.clear();
-  load_mailbox('sent');
+ 
   return false;
 }
 

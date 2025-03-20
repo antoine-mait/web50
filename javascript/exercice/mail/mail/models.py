@@ -5,7 +5,6 @@ from django.db import models
 class User(AbstractUser):
     pass
 
-
 class Email(models.Model):
     user = models.ForeignKey("User", on_delete=models.CASCADE, related_name="emails")
     sender = models.ForeignKey("User", on_delete=models.PROTECT, related_name="emails_sent")
