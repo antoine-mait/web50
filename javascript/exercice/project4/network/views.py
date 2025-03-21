@@ -11,11 +11,24 @@ from .models import User , Post , Follow , Comment , Like
 
 def index(request):
     posts = Post.objects.all().order_by('-post_time')
+    like_items = set()
+    count_likes = 0
+
+
+    if request.user.is_authenticated:
+        # Get the list of post IDs that the user has liked
+        like_items = set(Like.objects.filter(user=request.user).values_list("like_id", flat=True))
+
+    count_likes = len(like_items)
+    print(count_likes)
+
     return render(request, "network/index.html", {
         "posts": posts,
-        "MEDIA_URL": settings.MEDIA_URL
-        
-        })
+        "MEDIA_URL": settings.MEDIA_URL,
+        "like_items": like_items,  
+        "count_likes" : count_likes,
+    })
+
 
 
 def login_view(request):
@@ -89,12 +102,14 @@ def post(request, post_id):
 
     post = get_object_or_404(Post, id=post_id)
     likes = post.likes
-    liked = set()
     comments = Comment.objects.filter(post=post)
 
     if request.user.is_authenticated:
-        liked, _ = Like.objects.get_or_create(user=request.user)
-        like_items = set(liked.listings.values_list("id", flat=True))
+        like_items = set(Like.objects.filter(user=request.user).values_list("like_id", flat=True))
+        print(f"User {request.user.username} liked posts: {like_items}")
+    else:
+        like_items = set()
+
 
     is_in_liked = post.id in like_items if request.user.is_authenticated else False
     show_like_button = request.user.is_authenticated  # Afficher le bouton seulement si l'utilisateur est connecté
@@ -126,12 +141,20 @@ def post(request, post_id):
     })
 
 def toggle_like(request, post_id):
+
     if request.user.is_authenticated:
         post = get_object_or_404(Post, id=post_id)
-        liked, _ = Like.objects.get_or_create(user=request.user)
-        if post in liked.post.all():
-            liked.posts.remove(post)
+        like = Like.objects.filter(user=request.user, like=post).first()
+        
+        if like:
+            post.count_likes -= 1
+            like.delete()  # Unlike
         else:
-            liked.posts.add(post)
+            post.count_likes += 1
+            Like.objects.create(user=request.user, like=post)  # Like
+        
+        post.save()
+
         return redirect(request.META.get('HTTP_REFERER', 'index'))
+    
     return redirect("login")

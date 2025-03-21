@@ -26,22 +26,22 @@
                 <p class="post-title">{{ post.title }}</p>
                 <p class="post-time">{{ post.post_time }}</p>
                 <p class="post-user">By {{ post.user }}</p>
-                <form method="POST" action="{% url 'toggle_like' post.id %}"></form>
+                <p>{{ post.count_likes }} Likes</p>
+                
+                <form method="POST" action="{% url 'toggle_like' post.id %}">
+                    {% csrf_token %}
+                    
                     <button type="submit" class="like-btn">
                         {% if post.id in like_items %}
-                            <img class="like" src="{{ MEDIA_URL }}empty_heart.png" alt="empty_heart" width="20">
+                            <img class="like" src="{{ MEDIA_URL }}full_heart.png" alt="full_heart" width="20">
                             <p class="text-overlay">Like</p>
                         {% else %}
-                            <img class="like" src="{{ MEDIA_URL }}full_heart.png" alt="full_heart" width="20">
+                            <img class="like" src="{{ MEDIA_URL }}empty_heart.png" alt="empty_heart" width="20">
                             <p class="text-overlay">Unlike</p>
                         {% endif %}
                     </button>
-
-            <!-- {% if post.like == None %}
-                <p> no like </p>
-            {% else %}
-                <p>{{ post.like }}</p>
-            {% endif %} -->
+                </form>
+                    
             </div>
             
             <div class="post-description">{{ post.description|linebreaksbr }}</div>

@@ -11,7 +11,8 @@ class Post(models.Model):
     description = models.CharField(max_length=200)
     user = models.ForeignKey(User , on_delete=models.CASCADE, related_name="post", null= True )
     post_time = models.DateTimeField(auto_now_add=True)
-
+    count_likes = models.PositiveIntegerField(default=0)
+    
     def __str__(self):
         return f"Post uploaded at {self.post_time} by {self.user} : {self.description}"
 
@@ -32,7 +33,7 @@ class Comment(models.Model):
         return f"Comment by {self.user.username} on {self.post.title} : '  {self.content} '"
 
 class Like(models.Model):
-    like = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="like")
+    like = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="likes")
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_like")
 
     def __str__(self):
