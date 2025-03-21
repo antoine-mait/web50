@@ -34,10 +34,10 @@
                     <button type="submit" class="like-btn">
                         {% if post.id in like_items %}
                             <img class="like" src="{{ MEDIA_URL }}full_heart.png" alt="full_heart" width="20">
-                            <p class="text-overlay">Like</p>
+                            <p class="text-overlay">unLike</p>
                         {% else %}
                             <img class="like" src="{{ MEDIA_URL }}empty_heart.png" alt="empty_heart" width="20">
-                            <p class="text-overlay">Unlike</p>
+                            <p class="text-overlay">like</p>
                         {% endif %}
                     </button>
                 </form>

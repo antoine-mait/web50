@@ -30,7 +30,6 @@ def index(request):
     })
 
 
-
 def login_view(request):
     if request.method == "POST":
 
@@ -54,7 +53,6 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
-
 
 def register(request):
     if request.method == "POST":
@@ -101,17 +99,8 @@ def create_post(request):
 def post(request, post_id):
 
     post = get_object_or_404(Post, id=post_id)
-    likes = post.likes
     comments = Comment.objects.filter(post=post)
 
-    if request.user.is_authenticated:
-        like_items = set(Like.objects.filter(user=request.user).values_list("like_id", flat=True))
-        print(f"User {request.user.username} liked posts: {like_items}")
-    else:
-        like_items = set()
-
-
-    is_in_liked = post.id in like_items if request.user.is_authenticated else False
     show_like_button = request.user.is_authenticated  # Afficher le bouton seulement si l'utilisateur est connecté
     
     if request.method == 'POST' and 'comment_id' in request.POST:
@@ -133,9 +122,6 @@ def post(request, post_id):
     return render(request, "network/index.html", {
         "posts": [post],
         "post_id": post,
-        "likes" : likes,
-        "is_in_liked": is_in_liked,
-        "like_items": like_items,
         "show_like_button": show_like_button,
         "comments" : comments,
     })
