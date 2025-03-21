@@ -13,7 +13,9 @@ urlpatterns = [
     path("post/<int:post_id>/", views.post, name="post"),
 
     path("like/toggle/<int:post_id>/", views.toggle_like, name="toggle_like"),
-]
+
+    path("<str:username>/", views.profile, name="user_profile"),
+] 
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -11,22 +11,15 @@ from .models import User , Post , Follow , Comment , Like
 
 def index(request):
     posts = Post.objects.all().order_by('-post_time')
-    like_items = set()
-    count_likes = 0
 
-
-    if request.user.is_authenticated:
-        # Get the list of post IDs that the user has liked
-        like_items = set(Like.objects.filter(user=request.user).values_list("like_id", flat=True))
-
-    count_likes = len(like_items)
-    print(count_likes)
+    # Get likes information
+    like_items, count_likes = get_user_likes(request)
 
     return render(request, "network/index.html", {
         "posts": posts,
         "MEDIA_URL": settings.MEDIA_URL,
         "like_items": like_items,  
-        "count_likes" : count_likes,
+        "count_likes": count_likes,
     })
 
 
@@ -48,7 +41,6 @@ def login_view(request):
             })
     else:
         return render(request, "network/login.html")
-
 
 def logout_view(request):
     logout(request)
@@ -144,3 +136,32 @@ def toggle_like(request, post_id):
         return redirect(request.META.get('HTTP_REFERER', 'index'))
     
     return redirect("login")
+
+def get_user_likes(request):
+    if request.user.is_authenticated:
+        # Get the list of post IDs that the user has liked
+        like_items = set(Like.objects.filter(user=request.user).values_list("like_id", flat=True))
+        count_likes = len(like_items)
+        return like_items, count_likes
+    return set(), 0
+
+def profile(request, username=None):
+    user = get_object_or_404(User, username=username) if username else request.user
+
+    # Get the list of posts for the profile page
+    posts = Post.objects.filter(user=user).order_by('-post_time')
+    
+    # Get likes information
+    like_items, count_likes = get_user_likes(request)
+
+    is_profile_page = username is not None
+    title = f"{user.username}'s posts" if is_profile_page else "All Posts"
+
+    return render(request, "network/index.html", {
+        "title": title,
+        "posts": posts,
+        "is_profile_page": is_profile_page,
+        "MEDIA_URL": settings.MEDIA_URL,
+        "like_items": like_items,  
+        "count_likes": count_likes,
+    })

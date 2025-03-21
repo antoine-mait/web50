@@ -2,22 +2,30 @@
 
 {% block body %}
 
-<h2 class="title">All Posts</h2>
+{% if is_profile_page %}
+    
+    <h2 class="title">{{ title|capfirst }}</h2>
 
-<div class="form-container">
-    <form method="POST" action="{% url 'create_post' %}" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div>
-            <input type="text" name="title" placeholder="New post" required>
-        </div>
-        <div>
-            <textarea name="description" placeholder="Type your description" required></textarea>
-        </div>
-        <div>
-            <button class="btn btn-primary" type="submit">Publish</button>
-        </div>
-    </form>
-</div>
+{% else %}
+    
+    <h2 class="title">All Posts</h2>
+
+    <div class="form-container">
+        <form method="POST" action="{% url 'create_post' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div>
+                <input type="text" name="title" placeholder="New post" required>
+            </div>
+            <div>
+                <textarea name="description" placeholder="Type your description" required></textarea>
+            </div>
+            <div>
+                <button class="btn btn-primary" type="submit">Publish</button>
+            </div>
+        </form>
+    </div>
+
+{% endif %}
 
 <ul class="post-list">
     {% for post in posts %}
@@ -25,7 +33,9 @@
             <div class="post-head">
                 <p class="post-title">{{ post.title }}</p>
                 <p class="post-time">{{ post.post_time }}</p>
-                <p class="post-user">By {{ post.user }}</p>
+                <a class="post-user" href="{% url 'user_profile' post.user.username %}">
+                    By {{ post.user }}
+                </a>
                 <p>{{ post.count_likes }} Likes</p>
                 
                 <form method="POST" action="{% url 'toggle_like' post.id %}">
@@ -34,10 +44,10 @@
                     <button type="submit" class="like-btn">
                         {% if post.id in like_items %}
                             <img class="like" src="{{ MEDIA_URL }}full_heart.png" alt="full_heart" width="20">
-                            <p class="text-overlay">unLike</p>
+                            <p class="text-overlay">Unlike</p>
                         {% else %}
                             <img class="like" src="{{ MEDIA_URL }}empty_heart.png" alt="empty_heart" width="20">
-                            <p class="text-overlay">like</p>
+                            <p class="text-overlay">Like</p>
                         {% endif %}
                     </button>
                 </form>
