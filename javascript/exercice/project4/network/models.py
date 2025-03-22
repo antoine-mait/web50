@@ -3,7 +3,7 @@ from django.db import models
 
 
 class User(AbstractUser):
-    pass
+    count_followers = models.PositiveIntegerField(default=0)
 
 class Post(models.Model):
 
@@ -17,11 +17,12 @@ class Post(models.Model):
         return f"Post uploaded at {self.post_time} by {self.user} : {self.description}"
 
 class Follow(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    follow = models.ManyToManyField(Post)
+    profile = models.ForeignKey(User, on_delete=models.CASCADE, related_name="followers", null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="following")
 
     def __str__(self):
-        return f"Follower of {self.user.username}"
+        return f"{self.user.username} follows {self.profile.username}"
+
     
 class Comment(models.Model):
     content = models.TextField(max_length=255)

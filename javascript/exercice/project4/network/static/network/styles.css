@@ -88,6 +88,30 @@
     outline: none;
 }
 
+
+.follow-btn {
+    margin-top: 15px;
+    padding: 5px 10px; /* Adjust the button size */
+    background-color: #007bff; /* Example color */
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.follow-btn:hover {
+    background-color: #0056b3; /* Darker blue for hover effect */
+}
+.page_title {
+    display: flex;
+    align-items: center;  /* Aligns elements vertically */
+    gap: 10px;  /* Adds space between the items */
+}
+.followers-count {
+    margin: 0;
+    font-size: 16px;
+    color: gray;
+}
 textarea {
     display: flex;
     margin-top: 10px;
