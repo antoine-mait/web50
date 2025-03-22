@@ -22,7 +22,6 @@ def index(request):
         "count_likes": count_likes,
     })
 
-
 def login_view(request):
     if request.method == "POST":
 
@@ -153,7 +152,6 @@ def get_user_followers(user):
 def profile(request, username=None):
     viewed_profile  = get_object_or_404(User, username=username) if username else request.user
     user  = get_object_or_404(User, username=username) if username else request.user
-    print(f"Viewing profile: {user.username}")
 
     # Get the list of posts for the profile page
     posts = Post.objects.filter(user=user).order_by('-post_time')
@@ -165,13 +163,10 @@ def profile(request, username=None):
     like_items, count_likes = get_user_likes(request)
 
     count_followers =  Follow.objects.filter(profile=user).count()
-    print(f"Followed: {followed_account}, Followers Count: {count_followers}")
 
     is_profile_page = username is not None
     title = f"{user.username}'s posts" if is_profile_page else "All Posts"
     
-    print(f"Followed: {followed_account}, Followers Count: {count_followers}")  # Debugging
-
     return render(request, "network/index.html", {
         "title": title,
         "posts": posts,
@@ -182,6 +177,8 @@ def profile(request, username=None):
         "count_likes": count_likes,
         "count_followers" : count_followers,
         "viewed_profile": viewed_profile,
+        "profile" : user,
+        "user_page" : True,
     })
 
 def toggle_follow(request, username):
@@ -207,4 +204,33 @@ def toggle_follow(request, username):
 
         return redirect(request.META.get('HTTP_REFERER', 'index'))
 
+    return redirect("login")
+
+def following(request, username):
+
+    user  = get_object_or_404(User, username=username)
+
+    if request.user.is_authenticated:
+
+        follows = Follow.objects.filter(user=user)
+
+        # Initialize an empty list to hold the profiles of followed users
+        followed_users = []
+
+        # Loop through the follows to extract each followed user's profile
+        for follow in follows:
+            followed_users.append(follow.profile)
+        
+        posts = Post.objects.filter(user__in=followed_users).order_by('-post_time')  # 
+        like_items, count_likes = get_user_likes(request)
+
+        return render(request, "network/index.html", {
+            "title" :  f"{request.user}'s following",
+            "user_page": True,
+            "posts": posts,            
+            "like_items": like_items,  
+            "count_likes": count_likes,
+            "MEDIA_URL": settings.MEDIA_URL,
+        })
+    
     return redirect("login")

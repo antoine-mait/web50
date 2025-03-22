@@ -2,23 +2,26 @@
 
 {% block body %}
 
-{% if is_profile_page %}
+{% if user_page %}
     
     <div class="page_title">
         <h2 class="title">{{ title|capfirst }}</h2>
         
-        <form method="POST" action="{% url 'toggle_follow' username=viewed_profile.username %}">
-            {% csrf_token %}
-            
-            <button type="submit" class="follow-btn">
-                {% if followed_account %}
-                    Unfollow
-                {% else %}
-                    Follow
+        {% if is_profile_page %}
+            <form method="POST" action="{% url 'toggle_follow' username=viewed_profile.username %}">
+                {% csrf_token %}
+                {% if request.user != profile %}
+                <button type="submit" class="follow-btn">
+                    {% if followed_account %}
+                        Unfollow
+                    {% else %}
+                        Follow
+                    {% endif %}
+                </button>
                 {% endif %}
-            </button>
-            <p class="followers-count">{{ count_followers }} followers</p>
-        </form>
+                <p class="followers-count">{{ count_followers }} followers</p>
+            </form>
+        {% endif %}
     </div>
 
 {% else %}
