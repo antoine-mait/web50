@@ -69,6 +69,14 @@
                         {% endif %}
                     </button>
                 </form>
+
+                {% if request.user == post.user %}
+                   <!-- Show Edit button and the form -->
+                   <form method="POST" action="{% url 'post_edit' post.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-secondary">Edit</button>
+                    </form>
+                {% endif%}
                     
             </div>
             

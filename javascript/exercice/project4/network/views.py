@@ -240,3 +240,22 @@ def following(request, username):
         })
     
     return redirect("login")
+
+def post_edit(request, post_id):
+
+    post = get_object_or_404(Post, id=post_id)
+
+    if request.user.is_authenticated and post.user == request.user:
+        if request.method == "POST":
+            # Update the post with the new title and description
+            post.title = request.POST.get("title")
+            post.description = request.POST.get("description")
+            post.save()
+
+            # Redirect to the post detail page after updating
+            return redirect("post", post_id=post.id)
+
+        return render(request, "network/index.html", {
+            "post": post
+        })
+    

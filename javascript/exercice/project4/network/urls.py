@@ -20,6 +20,8 @@ urlpatterns = [
 
     path("following/<str:username>/", views.following, name="following"),
 
+    path("edit/<int:post_id>/", views.post_edit, name="post_edit"),
+
 ] 
 
 if settings.DEBUG:
