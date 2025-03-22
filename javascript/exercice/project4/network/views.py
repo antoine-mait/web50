@@ -5,21 +5,27 @@ from django.shortcuts import render , redirect , get_object_or_404
 from django.urls import reverse
 from django.contrib import messages
 from django.conf import settings
-
+from django.core.paginator import Paginator
 from .models import User , Post , Follow , Comment , Like
 
 
 def index(request):
     posts = Post.objects.all().order_by('-post_time')
 
+     # Pagination logic
+    paginator = Paginator(posts, 10)  # Show 10 posts per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     # Get likes information
     like_items, count_likes = get_user_likes(request)
 
     return render(request, "network/index.html", {
-        "posts": posts,
+        "posts": page_obj,
         "MEDIA_URL": settings.MEDIA_URL,
         "like_items": like_items,  
         "count_likes": count_likes,
+        "page_obj": page_obj,
     })
 
 def login_view(request):

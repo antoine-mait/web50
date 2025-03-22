@@ -123,6 +123,14 @@ textarea {
     padding: 10px;  
 }
 
+.pagination{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap:10px;
+    margin: 20px auto;
+    text-align: center;
+}
 input {
     border-radius: 15px;
     border: 2px solid rgba(0, 0, 0, 0.3);

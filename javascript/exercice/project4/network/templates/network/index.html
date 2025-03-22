@@ -46,7 +46,7 @@
 {% endif %}
 
 <ul class="post-list">
-    {% for post in posts %}
+    {% for post in page_obj %}
         <li class="post-item">
             <div class="post-head">
                 <p class="post-title">{{ post.title }}</p>
@@ -75,6 +75,23 @@
             <div class="post-description">{{ post.description|linebreaksbr }}</div>
         </li>
     {% endfor %}
+
+    <!-- Pagination Controls -->
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-secondary">Previous</a>
+            <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            <a href="?page=1" class="btn btn-secondary">First</a>            
+        {% endif %}       
+
+        {% if page_obj.has_next %}
+            
+            <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            <a href="?page={{ page_obj.next_page_number }}" class="btn btn-secondary">Next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-secondary">Last</a>
+            
+        {% endif %}
+    </div>
 </ul>
 
 
