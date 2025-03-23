@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 })
+
 console.log("CSRF Token:", getCookie("csrftoken"));
 
 // Alternative CSRF token getter
@@ -32,13 +33,25 @@ function getCsrfToken() {
         return csrfInput.value;
     }
     
-   
+    // Finally fall back to cookie method
+    return getCookie('csrftoken');
+}
+
+function getCookie(name){
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}`);
+    if(parts.length == 2) return parts.pop().split(';').shift();
+
 }
 
 function submitHandler(id) {
     const textareaValue = document.getElementById(`textarea_${id}`).value;
+    const content = document.getElementById(`content_${id}`);
+    const modal = document.getElementById(`modal_edit_post_${id}`)
     const csrftoken = getCsrfToken();
     console.log("Using CSRF Token:", csrftoken);
+
+
 
     fetch(`/edit/${id}`, {
         method: "POST",
@@ -58,7 +71,16 @@ function submitHandler(id) {
         return response.json();
     })
     .then(result => {
+
+        content.innerHTML = result.data;
         
-        
+        modal.classList.remove('show');
+        modal.setAttribute('aria-hidden','true');
+        modal.setAttribute('style','display: none');
+
+        const modalsBackdrops = document.getElementsByClassName('modal-backdrop');
+        for(let i=0; i < modalsBackdrops.length; i++) {
+            document.body.removeChild(modalsBackdrops[i]);
+        }
     })
 }
