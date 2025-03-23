@@ -7,7 +7,9 @@ from django.contrib import messages
 from django.conf import settings
 from django.core.paginator import Paginator
 from .models import User , Post , Follow , Comment , Like
-
+import json
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 def index(request):
     posts = Post.objects.all().order_by('-post_time')
@@ -241,21 +243,31 @@ def following(request, username):
     
     return redirect("login")
 
+
 def post_edit(request, post_id):
 
-    post = get_object_or_404(Post, id=post_id)
+    if not request.user.is_authenticated:
+            return JsonResponse({"error": "You must be logged in"}, status=401)
+        
+    if request.method != "POST":
+        return JsonResponse({"error": "POST method required"}, status=405)
 
-    if request.user.is_authenticated and post.user == request.user:
-        if request.method == "POST":
-            # Update the post with the new title and description
-            post.title = request.POST.get("title")
-            post.description = request.POST.get("description")
-            post.save()
-
-            # Redirect to the post detail page after updating
-            return redirect("post", post_id=post.id)
-
-        return render(request, "network/index.html", {
-            "post": post
+    try:
+        edit_post = Post.objects.get(pk=post_id)
+        
+        # Check if the user owns this post
+        if request.user != edit_post.user:
+            return JsonResponse({"error": "You cannot edit this post"}, status=403)
+            
+        data = json.loads(request.body)
+        edit_post.description = data["description"]
+        edit_post.save()
+        return JsonResponse({
+            "message": "Change successful", 
+            "data": data["description"]
         })
+    except Post.DoesNotExist:
+        return JsonResponse({"error": "Post not found"}, status=404)
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
     

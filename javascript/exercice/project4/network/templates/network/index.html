@@ -49,12 +49,12 @@
     {% for post in page_obj %}
         <li class="post-item">
             <div class="post-head">
-                <p class="post-title">{{ post.title }}</p>
-                <p class="post-time">{{ post.post_time }}</p>
+                <span class="post-title">{{ post.title }}</span>
+                <span class="post-time">{{ post.post_time }}</span>
                 <a class="post-user" href="{% url 'user_profile' post.user.username %}">
-                    By {{ post.user }}
+                    <span> By {{ post.user }} </span>
                 </a>
-                <p>{{ post.count_likes }} Likes</p>
+                <span>{{ post.count_likes }} Likes </span>
                 
                 <form method="POST" action="{% url 'toggle_like' post.id %}">
                     {% csrf_token %}
@@ -72,10 +72,31 @@
 
                 {% if request.user == post.user %}
                    <!-- Show Edit button and the form -->
-                   <form method="POST" action="{% url 'post_edit' post.id %}">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-secondary">Edit</button>
-                    </form>
+
+                    <div class="d-flex justify-content-aroud">
+                        
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#modal_edit_post_{{ post.id }}">Edit</button>
+                    </div>
+
+                    <div class="modal fade" id="modal_edit_post_{{ post.id }}" tabindex="-1" role="dialog" aria-labelledby="modal_edit_post_1_label" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title">Edit post</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <textarea rows="5" id="textarea_{{ post.id }}" class="form-control" name="description">{{ post.description }}</textarea>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-primary" onclick="submitHandler('{{ post.id }}')">Save changes</button>
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                 {% endif%}
                     
             </div>
