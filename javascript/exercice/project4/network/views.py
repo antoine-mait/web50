@@ -9,16 +9,13 @@ from django.core.paginator import Paginator
 from .models import User , Post , Follow ,Like
 import json
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+from django.db.models import F
 
 def index(request):
     posts = Post.objects.all().order_by('-post_time')
-
-     # Pagination logic
-    paginator = Paginator(posts, 10)  # Show 10 posts per page
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-
+    page_obj = paginate_posts(request, posts)
+    
     # Get likes information
     like_items, count_likes = get_user_likes(request)
 
@@ -79,11 +76,9 @@ def register(request):
     else:
         return render(request, "network/register.html")
 
+@login_required
 def create_post(request):
 
-    if not request.user.is_authenticated:
-        return redirect("login")
-    
     if request.method == "POST":  # Store user's price input
 
         Post.objects.create(
@@ -107,31 +102,30 @@ def post(request, post_id):
         "show_like_button": show_like_button,
     })
 
+@login_required
 def toggle_like(request, post_id):
-    if request.user.is_authenticated:
-        post = get_object_or_404(Post, id=post_id)
-        like = Like.objects.filter(user=request.user, like=post).first()
-        
-        if like:
-            post.count_likes -= 1
-            like.delete()  # Unlike
-            liked = False
-        else:
-            post.count_likes += 1
-            Like.objects.create(user=request.user, like=post)  # Like
-            liked = True
-        
-        post.save()
-
-        # Return JSON response with updated information
-        return JsonResponse({
-            "success": True,
-            "count_likes": post.count_likes,
-            "liked": liked,
-            "media_url": settings.MEDIA_URL
-        })
+    post = get_object_or_404(Post, id=post_id)
+    like = Like.objects.filter(user=request.user, like=post).first()
     
-    return JsonResponse({"error": "Authentication required"}, status=401)
+    if like:
+        post.count_likes = F('count_likes') - 1  
+        like.delete()
+        liked = False
+    else:
+        post.count_likes = F('count_likes') + 1 
+        Like.objects.create(user=request.user, like=post)
+        liked = True
+    
+    post.save()
+    
+    post.refresh_from_db()
+    
+    return JsonResponse({
+        "success": True,
+        "count_likes": post.count_likes,
+        "liked": liked,
+        "media_url": settings.MEDIA_URL
+    })
 
 def get_user_likes(request):
     if request.user.is_authenticated:
@@ -152,6 +146,7 @@ def profile(request, username=None):
 
     # Get the list of posts for the profile page
     posts = Post.objects.filter(user=user).order_by('-post_time')
+    page_obj = paginate_posts(request, posts)
     
     # Check if the current user follows the profile
     followed_account = Follow.objects.filter(user=request.user, profile=user).exists()
@@ -167,6 +162,7 @@ def profile(request, username=None):
     return render(request, "network/index.html", {
         "title": title,
         "posts": posts,
+        "page_obj": page_obj,
         "is_profile_page": is_profile_page,
         "MEDIA_URL": settings.MEDIA_URL,
         "followed_account": followed_account,
@@ -178,31 +174,26 @@ def profile(request, username=None):
         "user_page" : True,
     })
 
+@login_required
 def toggle_follow(request, username):
     if request.user.is_authenticated:
         profile = get_object_or_404(User, username=username)  
 
         if profile == request.user:
-            print("You cannot follow yourself!")  # Prevent self-following
             return redirect(request.META.get('HTTP_REFERER', 'index'))
 
         follow_entry = Follow.objects.filter(user=request.user, profile=profile)
 
         if follow_entry.exists():
             follow_entry.delete()
-            print(f"Unfollowed {profile.username}")
         else:
             Follow.objects.create(user=request.user, profile=profile)
-            print(f"Followed {profile.username}")
-
-        # Debugging: Check the correct follow action
-        count_followers = Follow.objects.filter(profile=profile).count()
-        print(f"Total Followers for {profile.username}: {count_followers}")  # Should match the viewed profile (testwo)
 
         return redirect(request.META.get('HTTP_REFERER', 'index'))
 
     return redirect("login")
 
+@login_required
 def following(request, username):
 
     user  = get_object_or_404(User, username=username)
@@ -211,20 +202,19 @@ def following(request, username):
 
         follows = Follow.objects.filter(user=user)
 
-        # Initialize an empty list to hold the profiles of followed users
-        followed_users = []
-
-        # Loop through the follows to extract each followed user's profile
-        for follow in follows:
-            followed_users.append(follow.profile)
+        followed_users = [follow.profile for follow in follows]
         
-        posts = Post.objects.filter(user__in=followed_users).order_by('-post_time')  # 
+        posts = Post.objects.filter(user__in=followed_users).exclude(user=user).order_by('-post_time')  
+
+        page_obj = paginate_posts(request, posts)
+
         like_items, count_likes = get_user_likes(request)
 
         return render(request, "network/index.html", {
             "title" :  f"{request.user}'s following",
             "user_page": True,
             "posts": posts,            
+            "page_obj": page_obj,
             "like_items": like_items,  
             "count_likes": count_likes,
             "MEDIA_URL": settings.MEDIA_URL,
@@ -232,6 +222,7 @@ def following(request, username):
     
     return redirect("login")
 
+@login_required
 def post_edit(request, post_id):
 
     if not request.user.is_authenticated:
@@ -259,3 +250,9 @@ def post_edit(request, post_id):
     except json.JSONDecodeError:
         return JsonResponse({"error": "Invalid JSON"}, status=400)
     
+def paginate_posts(request, posts, items_per_page=10):
+
+    paginator = Paginator(posts, items_per_page)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return page_obj
