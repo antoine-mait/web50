@@ -37,6 +37,8 @@
 .post-head{
     display: flex;
     gap:10px;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
 .post-title {
@@ -61,23 +63,28 @@
 .text-overlay {
     position: absolute;
     font-size: 12px;
-    margin-left: 30px;
-
-    transform: translate(-50%, -50%);
+    left: 30px; /* Position it to the right of the heart icon */
+    top: 50%; /* Center vertically */
+    transform: translateY(-50%);
     background-color: rgba(0, 0, 0, 0.3);
     color: white;
     padding: 5px;
     border-radius: 5px;
     opacity: 0;
     transition: opacity 0.3s ease;
+    white-space: nowrap; /* Prevent text from wrapping */
+    pointer-events: none; /* Make sure it doesn't interfere with clicks */
 }
+
 .like-btn {
     position: relative;
-    margin-top: -25px;
-    margin-left: 0px;
     border: none;
     background: transparent;
-    padding: 0;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    height: 30px; /* Set a specific height */
+    width: 30px; /* Set a specific width */
 }
 
 .like-btn:hover .text-overlay {

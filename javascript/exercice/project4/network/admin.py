@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Post, Like
+from .models import Post, Like , User , Follow
 
 def reset_likes(modeladmin, request, queryset):
     for post in queryset:
@@ -13,3 +13,7 @@ class PostAdmin(admin.ModelAdmin):
     actions = [reset_likes]
 
 admin.site.register(Post, PostAdmin)
+
+admin.site.register(User)
+admin.site.register(Follow)
+admin.site.register(Like)

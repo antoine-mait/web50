@@ -84,3 +84,45 @@ function submitHandler(id) {
         }
     })
 }
+
+function toggleLike(postId) {
+    const likeBtn = document.querySelector(`#like-btn-${postId}`);
+    const likeCount = document.querySelector(`#like-count-${postId}`);
+    const csrftoken = getCsrfToken();
+    
+    fetch(`/like/toggle/${postId}/`, {
+        method: "POST",
+        credentials: 'same-origin',
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrftoken
+        },
+        body: JSON.stringify({})
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(result => {
+        // Update like count
+        likeCount.textContent = `${result.count_likes} Likes`;
+        
+        // Update like button icon based on like status
+        if (result.liked) {
+            likeBtn.innerHTML = `
+                <img class="like" src="${result.media_url}full_heart.png" alt="full_heart" width="20">
+                <p class="text-overlay">Unlike</p>
+            `;
+        } else {
+            likeBtn.innerHTML = `
+                <img class="like" src="${result.media_url}empty_heart.png" alt="empty_heart" width="20">
+                <p class="text-overlay">Like</p>
+            `;
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+    });
+}

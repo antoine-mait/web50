@@ -23,16 +23,6 @@ class Follow(models.Model):
     def __str__(self):
         return f"{self.user.username} follows {self.profile.username}"
 
-    
-class Comment(models.Model):
-    content = models.TextField(max_length=255)
-    post_time = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments")
-
-    def __str__(self):
-        return f"Comment by {self.user.username} on {self.post.title} : '  {self.content} '"
-
 class Like(models.Model):
     like = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="likes")
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_like")

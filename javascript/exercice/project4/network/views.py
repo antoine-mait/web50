@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.contrib import messages
 from django.conf import settings
 from django.core.paginator import Paginator
-from .models import User , Post , Follow , Comment , Like
+from .models import User , Post , Follow ,Like
 import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -98,35 +98,16 @@ def create_post(request):
 def post(request, post_id):
 
     post = get_object_or_404(Post, id=post_id)
-    comments = Comment.objects.filter(post=post)
 
     show_like_button = request.user.is_authenticated  # Afficher le bouton seulement si l'utilisateur est connecté
-    
-    if request.method == 'POST' and 'comment_id' in request.POST:
-        comment_id = request.POST['comment_id']
-        comment = get_object_or_404(Comment, id=comment_id)
-
-        # Ensure the user is the one who posted the comment
-        if comment.user == request.user:
-            new_content = request.POST.get('comment')
-            if new_content:
-                comment.content = new_content
-                comment.save()
-                messages.success(request, "Your comment has been updated.")
-            else:
-                messages.error(request, "Please enter a valid comment.")
-        
-        return redirect('post', post_id=post_id)
     
     return render(request, "network/index.html", {
         "posts": [post],
         "post_id": post,
         "show_like_button": show_like_button,
-        "comments" : comments,
     })
 
 def toggle_like(request, post_id):
-
     if request.user.is_authenticated:
         post = get_object_or_404(Post, id=post_id)
         like = Like.objects.filter(user=request.user, like=post).first()
@@ -134,15 +115,23 @@ def toggle_like(request, post_id):
         if like:
             post.count_likes -= 1
             like.delete()  # Unlike
+            liked = False
         else:
             post.count_likes += 1
             Like.objects.create(user=request.user, like=post)  # Like
+            liked = True
         
         post.save()
 
-        return redirect(request.META.get('HTTP_REFERER', 'index'))
+        # Return JSON response with updated information
+        return JsonResponse({
+            "success": True,
+            "count_likes": post.count_likes,
+            "liked": liked,
+            "media_url": settings.MEDIA_URL
+        })
     
-    return redirect("login")
+    return JsonResponse({"error": "Authentication required"}, status=401)
 
 def get_user_likes(request):
     if request.user.is_authenticated:
@@ -242,7 +231,6 @@ def following(request, username):
         })
     
     return redirect("login")
-
 
 def post_edit(request, post_id):
 
